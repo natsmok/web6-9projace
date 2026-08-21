@@ -76,6 +76,14 @@
     justify-content: center;
     padding: 32px 20px 56px;
     text-align: center;
+    opacity: 0; /* ซ่อนเนื้อหาหลักไว้ก่อน */
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+
+  .stage.active {
+    opacity: 1;
+    visibility: visible;
   }
 
   .frame {
@@ -161,7 +169,6 @@
     100% { opacity: 0; transform: scale(1.5); }
   }
 
-  /* เอฟเฟกต์ตัวหนังสือกระพริบวิ้งๆ นุ่มนวล */
   @keyframes textBlink {
     0%, 100% {
       opacity: 1;
@@ -181,6 +188,122 @@
     text-shadow: 0 1px 4px rgba(0,0,0,0.4);
     animation: textBlink 2.2s ease-in-out infinite;
   }
+
+  #bg-text {
+      display: none;
+  }
+
+  /* --- เริ่มส่วนสไตล์ของ Overlay (ปรับแต่งจาก Love.css ให้เข้ากับธีมหิมะ) --- */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(6, 10, 29, 0.4); /* พื้นหลังมืดนิดๆ ให้กล่องเด่น */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+
+  .overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .card {
+    width: 300px;
+    padding: 36px 28px 28px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(140, 180, 255, 0.25);
+    box-shadow: 0 0 60px rgba(140, 180, 255, 0.15), inset 0 0 40px rgba(140, 180, 255, 0.05);
+    text-align: center;
+    transform: translateY(0);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .overlay.hidden .card {
+      transform: translateY(-30px);
+  }
+
+  .bud-emoji {
+    font-size: 46px; 
+    display: inline-block;
+    filter: drop-shadow(0 0 18px rgba(140, 180, 255, 0.6));
+    animation: bud-pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bud-pulse {
+    0%, 100% { transform: scale(1) rotate(-2deg); }
+    50% { transform: scale(1.08) rotate(2deg); }
+  }
+
+  .card h2 { 
+    margin: 16px 0 0; 
+    color: #fff; 
+    font-size: 22px; 
+    letter-spacing: 0.5px; 
+    font-weight: 700; 
+  }
+
+  .bar-track {
+    margin-top: 22px; 
+    height: 6px; 
+    width: 100%; 
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08); 
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%; 
+    width: 0%; 
+    border-radius: 999px;
+    background: linear-gradient(90deg, #5b8def, #c2d6ff); /* เปลี่ยนจากแดงเป็น ฟ้า-ขาว */
+    box-shadow: 0 0 12px rgba(140, 180, 255, 0.7);
+    transition: width 0.25s linear; /* ทำให้บาร์วิ่งสมูทตาม Love.css */
+  }
+
+  .status-text { 
+    margin-top: 12px; 
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    color: rgba(255,255,255,0.6); 
+    height: 16px; /* กันพื้นที่ไว้ไม่ให้กระตุกเวลาเปลี่ยนคำ */
+  }
+
+  .bloom-btn {
+    margin-top: 22px; 
+    width: 100%; 
+    padding: 14px 0; 
+    border-radius: 12px; 
+    border: none;
+    background: rgba(255,255,255,0.06); 
+    color: rgba(255,255,255,0.3);
+    font-weight: 700; 
+    letter-spacing: 1.5px; 
+    font-size: 13px; 
+    cursor: not-allowed; 
+    transition: all 0.4s ease;
+  }
+
+  .bloom-btn.ready {
+    color: #fff; 
+    background: linear-gradient(90deg, #3b74e6, #7da5f2); /* ฟ้า-ฟ้าอ่อน */
+    box-shadow: 0 6px 20px rgba(140, 180, 255, 0.35); 
+    cursor: pointer;
+  }
+  
+  .bloom-btn.ready:hover {
+    box-shadow: 0 6px 25px rgba(140, 180, 255, 0.5);
+  }
+
+  .bloom-btn.ready:active { 
+    transform: scale(0.97); 
+  }
+  /* --- สิ้นสุดส่วนสไตล์ของ Overlay --- */
 </style>
 </head>
 <body>
@@ -188,7 +311,27 @@
 <div id="sky"></div>
 <div id="bg-text">ปี69</div>
 
-<div class="stage">
+<!-- --- เริ่มส่วน HTML ของ Overlay --- -->
+<div class="overlay" id="introOverlay">
+  <div class="card">
+    <!-- ❄️ 1. แก้ไข Emoji ด้านบนสุดตรงนี้ ❄️ -->
+    <div class="bud-emoji">❄️</div>
+    
+    <!-- ❄️ 2. แก้ไขหัวข้อหลักตรงนี้ ❄️ -->
+    <h2>Project M.6/9</h2>
+    
+    <div class="bar-track"><div class="bar-fill" id="progressBar"></div></div>
+    
+    <!-- ข้อความตรงนี้จะถูกควบคุมและเปลี่ยนโดย Javascript ด้านล่าง -->
+    <div class="status-text" id="loadingText">Gathering snowflakes ...</div>
+    
+    <!-- ❄️ 3. แก้ไขข้อความปุ่มกดตรงนี้ ❄️ -->
+    <button class="bloom-btn" id="enterBtn" disabled>โหลดเสร็จเเล้วกดเลย!</button>
+  </div>
+</div>
+<!-- --- สิ้นสุดส่วน HTML ของ Overlay --- -->
+
+<div class="stage" id="mainStage">
   <div class="frame" id="frame">
     <!-- ใส่ URL รูปที่ 1 (แสดงก่อนกดปุ่ม) ตรงนี้ -->
     <img id="img1" alt="รูปที่ 1" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321902/MY_G_yf7gtd.png">
@@ -249,6 +392,69 @@
     flake.style.animationDelay = (Math.random() * fallDur * -1) + 's, ' + (Math.random() * swayDur * -1) + 's';
     sky.appendChild(flake);
   }
+
+  // --- เริ่มส่วน Javascript ควบคุม Loading Overlay ---
+  
+  // ❄️ 4. แก้ไขข้อความที่จะให้แสดงสลับกันตอนโหลดตรงนี้ ❄️
+  // (เพิ่มหรือลดจำนวนบรรทัดได้ตามต้องการ)
+  var loadingStatuses = [
+    'Gathering snowflakes ...',
+    'Watering with a little code ...',
+    'Recalling our memories ...',
+    'Almost ready ...'
+  ];
+
+  var progressBar = document.getElementById('progressBar');
+  var loadingText = document.getElementById('loadingText');
+  var enterBtn = document.getElementById('enterBtn');
+  var introOverlay = document.getElementById('introOverlay');
+  var mainStage = document.getElementById('mainStage');
+
+  var progress = 0;
+  var statusIndex = 0;
+  
+  // สร้างตัวจับเวลาให้ดาวน์โหลดวิ่งแบบสมูท
+  var loadInterval = setInterval(function() {
+    progress += Math.random() * 9 + 3; // เพิ่มเปอร์เซ็นต์แบบสุ่ม
+    
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(loadInterval);
+      
+      // ❄️ 5. แก้ไขข้อความเมื่อโหลดเสร็จเต็ม 100% ตรงนี้ ❄️
+      loadingText.textContent = 'Ready to explore 6/9 ❄️'; 
+      
+      enterBtn.disabled = false;
+      enterBtn.classList.add('ready');
+    } else {
+      // คำนวณเพื่อเปลี่ยนข้อความตามเปอร์เซ็นต์การโหลด
+      var newIndex = Math.min(loadingStatuses.length - 1, Math.floor(progress / (100 / loadingStatuses.length)));
+      if (newIndex !== statusIndex) {
+        statusIndex = newIndex;
+        loadingText.textContent = loadingStatuses[statusIndex];
+      }
+    }
+    
+    progressBar.style.width = progress + '%';
+  }, 220); // ความเร็วในการรันหลอดโหลด (220 ms)
+
+  enterBtn.addEventListener('click', function() {
+      if(enterBtn.disabled) return;
+      
+      // เฟดเอาต์ Overlay
+      introOverlay.classList.add('hidden');
+      
+      // รอให้ Overlay เฟดเอาต์เกือบเสร็จ ค่อยแสดงเนื้อหาหลัก
+      setTimeout(function() {
+          mainStage.classList.add('active');
+      }, 600); 
+      
+      // เอา Overlay ออกจาก DOM เมื่อมองไม่เห็นแล้ว (เคลียร์พื้นที่)
+      setTimeout(function() {
+          introOverlay.style.display = 'none'; 
+      }, 1000); 
+  });
+  // --- สิ้นสุดส่วน Javascript ควบคุม Loading Overlay ---
 
   var img1 = document.getElementById('img1');
   var img2 = document.getElementById('img2');
