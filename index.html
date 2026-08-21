@@ -18,7 +18,7 @@
     font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #eef3ff;
   }
-  
+
   #sky {
     position: fixed;
     inset: 0;
@@ -97,6 +97,7 @@
                 0 20px 60px rgba(0,0,0,0.45),
                 0 0 40px rgba(120,160,255,0.12);
     overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .frame img {
@@ -106,11 +107,33 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 900ms ease;
+    /* เอฟเฟกต์ตอนภาพซ่อน: ขยายใหญ่ขึ้น, เบลอ, และสว่างขึ้น (เหมือนน้ำแข็งเกาะ) */
+    transform: scale(1.15);
+    filter: blur(12px) brightness(1.5);
+    transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1s ease;
   }
 
   .frame img.show {
     opacity: 1;
+    /* เอฟเฟกต์ตอนภาพแสดง: กลับสู่ขนาดปกติและชัดเจน */
+    transform: scale(1);
+    filter: blur(0px) brightness(1);
+  }
+
+  /* เอฟเฟกต์แสงวาบพายุหิมะ (Blizzard Flash) */
+  .blizzard-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, #ffffff 0%, rgba(200, 230, 255, 0.9) 70%, rgba(150, 190, 255, 0.8) 100%);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease-out;
+  }
+
+  .blizzard-flash.active {
+    opacity: 1;
+    transition: opacity 0.15s ease-in; /* สว่างวาบอย่างรวดเร็ว */
   }
 
   h1 {
@@ -193,7 +216,7 @@
       display: none;
   }
 
-  /* --- เริ่มส่วนสไตล์ของ Overlay (ปรับแต่งจาก Love.css ให้เข้ากับธีมหิมะ) --- */
+  /* --- เริ่มส่วนสไตล์ของ Overlay --- */
   .overlay {
     position: fixed;
     inset: 0;
@@ -201,7 +224,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(6, 10, 29, 0.4); /* พื้นหลังมืดนิดๆ ให้กล่องเด่น */
+    background-color: rgba(6, 10, 29, 0.4); 
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -223,7 +246,7 @@
     transform: translateY(0);
     transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  
+
   .overlay.hidden .card {
       transform: translateY(-30px);
   }
@@ -254,7 +277,6 @@
     width: 100%; 
     border-radius: 999px;
     background: rgba(255,255,255,0.08); 
-    /* เปลี่ยนจาก hidden เป็น visible เพื่อให้หัววงกลมแสดงทะลุขอบออกมาได้ */
     overflow: visible; 
   }
 
@@ -265,32 +287,23 @@
     background: linear-gradient(90deg, #5b8def, #c2d6ff); 
     box-shadow: 0 0 12px rgba(140, 180, 255, 0.7);
     transition: width 0.25s linear; 
-    /* สำคัญ: กำหนด relative เพื่อให้หัววงกลมอิงตำแหน่งจากปลายหลอด */
     position: relative; 
   }
 
-  /* ❄️ สไตล์ของ "หัว" หลอดโหลด (วงกลม หรือ รูปภาพ) ❄️ */
   .bar-head {
     position: absolute;
-    right: -12px; /* ปรับให้ตำแหน่งกึ่งกลางพอดีกับรูปที่ใหญ่ขึ้น */
+    right: -12px;
     top: 50%;
     transform: translateY(-50%);
-    
-    /* ขนาดของหัวหลอดโหลด (ปรับให้ใหญ่ขึ้นนิดหน่อยเพื่อเห็นรูปชัดขึ้น) */
     width: 24px; 
     height: 24px;
-    
-    /* --- แบบที่ 2: ใช้รูปภาพ --- */
-    border-radius: 50%; /* ทำให้รูปเป็นวงกลม */
-    
-    /* 👇👇👇 เอาลิงก์รูปภาพ (URL) ของคุณมาใส่ตรงนี้ แทนที่ image_6b3024.png 👇👇👇 */
+    border-radius: 50%;
     background-image: url('https://res.cloudinary.com/cr3qiibb/image/upload/v1787339234/%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_mzlyzk.png'); 
-    
     background-size: cover; 
-    background-position: center 20%; /* ปรับโฟกัสไปที่ใบหน้า (บนนิดหน่อย) */
+    background-position: center 20%; 
     background-color: transparent; 
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(91, 141, 239, 0.6); /* เก็บเงาไว้ให้ดูโดดเด่น */
-    border: 1px solid #fff; /* เพิ่มขอบสีขาวบางๆ ให้รูปดูชัดเจนขึ้น */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(91, 141, 239, 0.6);
+    border: 1px solid #fff; 
   }
 
   .status-text { 
@@ -317,11 +330,11 @@
 
   .bloom-btn.ready {
     color: #fff; 
-    background: linear-gradient(90deg, #3b74e6, #7da5f2); /* ฟ้า-ฟ้าอ่อน */
+    background: linear-gradient(90deg, #3b74e6, #7da5f2);
     box-shadow: 0 6px 20px rgba(140, 180, 255, 0.35); 
     cursor: pointer;
   }
-  
+
   .bloom-btn.ready:hover {
     box-shadow: 0 6px 25px rgba(140, 180, 255, 0.5);
   }
@@ -329,7 +342,6 @@
   .bloom-btn.ready:active { 
     transform: scale(0.97); 
   }
-  /* --- สิ้นสุดส่วนสไตล์ของ Overlay --- */
 </style>
 </head>
 <body>
@@ -337,38 +349,28 @@
 <div id="sky"></div>
 <div id="bg-text">ปี69</div>
 
-<!-- --- เริ่มส่วน HTML ของ Overlay --- -->
 <div class="overlay" id="introOverlay">
   <div class="card">
-    <!-- ❄️ 1. แก้ไข Emoji ด้านบนสุดตรงนี้ ❄️ -->
     <div class="bud-emoji">❄️</div>
-    
-    <!-- ❄️ 2. แก้ไขหัวข้อหลักตรงนี้ ❄️ -->
     <h2>Projace M.6/9</h2>
-    
     <div class="bar-track">
       <div class="bar-fill" id="progressBar">
-        <!-- ❄️ ส่วนหัวของหลอดดาวน์โหลด ❄️ -->
         <div class="bar-head"></div>
       </div>
     </div>
-    
-    <!-- ข้อความตรงนี้จะถูกควบคุมและเปลี่ยนโดย Javascript ด้านล่าง -->
     <div class="status-text" id="loadingText">Gathering snowflakes ...</div>
-    
-    <!-- ❄️ 3. แก้ไขข้อความปุ่มกดตรงนี้ ❄️ -->
     <button class="bloom-btn" id="enterBtn" disabled>กดเพื่อชม</button>
   </div>
 </div>
-<!-- --- สิ้นสุดส่วน HTML ของ Overlay --- -->
 
 <div class="stage" id="mainStage">
   <div class="frame" id="frame">
-    <!-- ใส่ URL รูปที่ 1 (แสดงก่อนกดปุ่ม) ตรงนี้ -->
+    <!-- ภาพที่ 1 -->
     <img id="img1" alt="รูปที่ 1" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321902/MY_G_yf7gtd.png">
-    
-    <!-- ใส่ URL รูปที่ 2 (แสดงหลังกดปุ่ม) ตรงนี้ -->
+    <!-- ภาพที่ 2 -->
     <img id="img2" alt="รูปที่ 2" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321899/%E0%B8%A3%E0%B8%A7%E0%B8%A1_zialia.jpg">
+    <!-- เลเยอร์เอฟเฟกต์แสงวาบ -->
+    <div id="blizzardFlash" class="blizzard-flash"></div>
   </div>
 
   <h1>6/9 on the top ❄️</h1>
@@ -376,7 +378,6 @@
 
   <button class="btn" id="revealBtn">BOOM! ❄️</button>
 
-  <!-- ใส่ URL ไฟล์เพลง MP3 ตรงนี้ -->
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
 
   <footer class="copyright">
@@ -406,7 +407,7 @@
   // สร้างเอฟเฟกต์หิมะอีโมจิตกลงมาอย่างสมูท
   var flakeChars = ['❄', '❅', '❆'];
   var flakeCount = 36;
-  
+
   for (var j = 0; j < flakeCount; j++) {
     var flake = document.createElement('div');
     flake.className = 'flake';
@@ -415,19 +416,15 @@
     flake.style.left = (Math.random() * 100) + 'vw';
     flake.style.fontSize = fsize + 'px';
     flake.style.opacity = (Math.random() * 0.5 + 0.4).toFixed(2);
-    
+
     var fallDur = (Math.random() * 8 + 9).toFixed(1);
     var swayDur = (Math.random() * 3 + 2.5).toFixed(1);
-    
+
     flake.style.animationDuration = fallDur + 's, ' + swayDur + 's';
     flake.style.animationDelay = (Math.random() * fallDur * -1) + 's, ' + (Math.random() * swayDur * -1) + 's';
     sky.appendChild(flake);
   }
 
-  // --- เริ่มส่วน Javascript ควบคุม Loading Overlay ---
-  
-  // ❄️ 4. แก้ไขข้อความที่จะให้แสดงสลับกันตอนโหลดตรงนี้ ❄️
-  // (เพิ่มหรือลดจำนวนบรรทัดได้ตามต้องการ)
   var loadingStatuses = [
     'Gathering snowflakes ...',
     'Watering with a little code ...',
@@ -443,52 +440,47 @@
 
   var progress = 0;
   var statusIndex = 0;
-  
-  // สร้างตัวจับเวลาให้ดาวน์โหลดวิ่งแบบสมูท
+
   var loadInterval = setInterval(function() {
-    progress += Math.random() * 9 + 3; // เพิ่มเปอร์เซ็นต์แบบสุ่ม
-    
+    progress += Math.random() * 9 + 3; 
+
     if (progress >= 100) {
       progress = 100;
       clearInterval(loadInterval);
-      
-      // ❄️ 5. แก้ไขข้อความเมื่อโหลดเสร็จเต็ม 100% ตรงนี้ ❄️
+
       loadingText.textContent = 'โหลดเสร็จเเล้วกดได้เลย!!! ❄️'; 
-      
+
       enterBtn.disabled = false;
       enterBtn.classList.add('ready');
     } else {
-      // คำนวณเพื่อเปลี่ยนข้อความตามเปอร์เซ็นต์การโหลด
       var newIndex = Math.min(loadingStatuses.length - 1, Math.floor(progress / (100 / loadingStatuses.length)));
       if (newIndex !== statusIndex) {
         statusIndex = newIndex;
         loadingText.textContent = loadingStatuses[statusIndex];
       }
     }
-    
+
     progressBar.style.width = progress + '%';
-  }, 220); // ความเร็วในการรันหลอดโหลด (220 ms)
+  }, 220); 
 
   enterBtn.addEventListener('click', function() {
       if(enterBtn.disabled) return;
-      
-      // เฟดเอาต์ Overlay
+
       introOverlay.classList.add('hidden');
-      
-      // รอให้ Overlay เฟดเอาต์เกือบเสร็จ ค่อยแสดงเนื้อหาหลัก
+
       setTimeout(function() {
           mainStage.classList.add('active');
       }, 600); 
-      
-      // เอา Overlay ออกจาก DOM เมื่อมองไม่เห็นแล้ว (เคลียร์พื้นที่)
+
       setTimeout(function() {
           introOverlay.style.display = 'none'; 
       }, 1000); 
   });
-  // --- สิ้นสุดส่วน Javascript ควบคุม Loading Overlay ---
 
+  var frame = document.getElementById('frame');
   var img1 = document.getElementById('img1');
   var img2 = document.getElementById('img2');
+  var blizzardFlash = document.getElementById('blizzardFlash');
   var bgm = document.getElementById('bgm');
   var btn = document.getElementById('revealBtn');
   var subTitle = document.getElementById('subTitle');
@@ -502,7 +494,7 @@
     if (revealed) return;
     revealed = true;
 
-    // เล่นเพลงทันที (รองรับ iOS Autoplay policy เมื่อถูกเรียกผ่าน click/touch)
+    // เล่นเพลง
     if (bgm) {
       bgm.volume = 1.0;
       var playPromise = bgm.play();
@@ -513,41 +505,59 @@
       }
     }
 
-    // สลับรูปภาพจาก รูปที่ 1 -> รูปที่ 2
-    img2.classList.add('show');
-    img1.classList.remove('show');
+    // 1. เริ่มเอฟเฟกต์แสงวาบ และให้กรอบยุบตัวลงนิดนึง (เตรียมระเบิด)
+    blizzardFlash.classList.add('active');
+    frame.style.transform = 'scale(0.95)';
 
-    // เปลี่ยนข้อความบรรยายใหม่เมื่อแสดงรูปที่ 2
-    if (subTitle) {
-      subTitle.textContent = 'จัดทำโครงการสำเร็จ!!!';
-    }
-
-    // เอฟเฟกต์ปุ่ม
-    btn.classList.add('pulse');
-    btn.textContent = ' 17 สิงหาคม 2569';
+    // 2. ตั้งเวลาสลับภาพในจังหวะที่แสงสว่างวาบที่สุด (ประมาณ 250ms)
     setTimeout(function() {
-      btn.classList.remove('pulse');
-    }, 1300);
+      
+      // สลับรูปภาพ
+      img2.classList.add('show');
+      img1.classList.remove('show');
+      
+      // ให้กรอบเด้งกลับมาขนาดปกติ
+      frame.style.transform = 'scale(1)';
+      
+      if (subTitle) {
+        subTitle.textContent = 'จัดทำโครงการสำเร็จ!!!';
+      }
 
-    // ปล่อยหิมะระเบิดออกมาเพิ่ม
-    burstSnow();
+      // 3. ตั้งเวลาเอาแสงวาบออก เพื่อเผยให้เห็นภาพใหม่ที่ค่อยๆ ชัดขึ้น
+      setTimeout(function() {
+         blizzardFlash.classList.remove('active');
+      }, 200);
+
+      // เอฟเฟกต์ปุ่ม
+      btn.classList.add('pulse');
+      btn.textContent = ' 17 สิงหาคม 2569';
+      setTimeout(function() {
+        btn.classList.remove('pulse');
+      }, 1300);
+
+      // ปล่อยหิมะระเบิดออกมาเพิ่ม
+      burstSnow();
+
+    }, 250);
   }
 
   btn.addEventListener('click', handleReveal);
 
   function burstSnow() {
-    for (var k = 0; k < 28; k++) {
+    for (var k = 0; k < 35; k++) {
       var extraFlake = document.createElement('div');
       extraFlake.className = 'flake';
       extraFlake.textContent = flakeChars[Math.floor(Math.random() * flakeChars.length)];
       var fsize = Math.random() * 18 + 14;
       extraFlake.style.left = (Math.random() * 100) + 'vw';
+      extraFlake.style.top = '10vh'; // ให้เริ่มจากใกล้ๆ กรอบรูป
       extraFlake.style.fontSize = fsize + 'px';
       extraFlake.style.opacity = (Math.random() * 0.5 + 0.5).toFixed(2);
-      
-      var fallDur = (Math.random() * 5 + 5).toFixed(1);
+      extraFlake.style.textShadow = '0 0 10px rgba(255,255,255,0.8)';
+
+      var fallDur = (Math.random() * 4 + 4).toFixed(1); // ตกเร็วขึ้นนิดนึง
       var swayDur = (Math.random() * 2 + 2).toFixed(1);
-      
+
       extraFlake.style.animationDuration = fallDur + 's, ' + swayDur + 's';
       sky.appendChild(extraFlake);
 
