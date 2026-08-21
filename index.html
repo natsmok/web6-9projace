@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ม.6/9ปี69ดิ่วะ ❄️</title>
+<title>6/9 ปี69ดิ่วะ ❄️</title>
 <style>
   * {
     box-sizing: border-box;
@@ -161,23 +161,25 @@
     100% { opacity: 0; transform: scale(1.5); }
   }
 
-  #bg-text {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(100px, 30vw, 300px);
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.05); /* จางๆ */
-    z-index: 1; /* ให้อยู่หลังเวที (stage) แต่เหนือท้องฟ้า (sky) */
-    pointer-events: none; /* ไม่ให้กั้นการคลิก */
-    opacity: 0;
-    transition: opacity 2s ease-in-out; /* ค่อยๆ ปรากฏขึ้นมาอย่างช้าๆ */
-    white-space: nowrap;
+  /* เอฟเฟกต์ตัวหนังสือกระพริบวิ้งๆ นุ่มนวล */
+  @keyframes textBlink {
+    0%, 100% {
+      opacity: 1;
+      text-shadow: 0 0 12px rgba(200, 225, 255, 0.9), 0 0 20px rgba(140, 180, 255, 0.5);
+    }
+    50% {
+      opacity: 0.4;
+      text-shadow: 0 0 2px rgba(180, 205, 255, 0.2);
+    }
   }
 
-  #bg-text.show {
-    opacity: 1;
+  .copyright {
+    margin-top: 28px;
+    font-size: 12.5px;
+    color: #dbe7ff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    animation: textBlink 2.2s ease-in-out infinite;
   }
 </style>
 </head>
@@ -196,12 +198,16 @@
   </div>
 
   <h1>6/9 on the top ❄️</h1>
-  <p class="sub" id="subTitle">กดปุ่มด้านล่างดูสิ!</p>
+  <p class="sub" id="subTitle">กดปุ่มด้านล่างดูสิ!!!</p>
 
   <button class="btn" id="revealBtn">BOOM! ❄️</button>
 
   <!-- ใส่ URL ไฟล์เพลง MP3 ตรงนี้ -->
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
+
+  <footer class="copyright">
+    สร้างสรรค์โดย ชั้น ม.6/9 ❄️ | สงวนลิขสิทธิ์ © All Rights Reserved
+  </footer>
 </div>
 
 <script>
@@ -276,7 +282,7 @@
 
     // เปลี่ยนข้อความบรรยายใหม่เมื่อแสดงรูปที่ 2
     if (subTitle) {
-      subTitle.textContent = 'จัดโครงการทีปังกรคัพสำเร็จ!!!';
+      subTitle.textContent = 'จัดทำโครงการสำเร็จ!!!';
     }
 
     // เอฟเฟกต์ปุ่ม
