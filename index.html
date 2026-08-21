@@ -254,24 +254,50 @@
     width: 100%; 
     border-radius: 999px;
     background: rgba(255,255,255,0.08); 
-    overflow: hidden;
+    /* เปลี่ยนจาก hidden เป็น visible เพื่อให้หัววงกลมแสดงทะลุขอบออกมาได้ */
+    overflow: visible; 
   }
 
   .bar-fill {
     height: 100%; 
     width: 0%; 
     border-radius: 999px;
-    background: linear-gradient(90deg, #5b8def, #c2d6ff); /* เปลี่ยนจากแดงเป็น ฟ้า-ขาว */
+    background: linear-gradient(90deg, #5b8def, #c2d6ff); 
     box-shadow: 0 0 12px rgba(140, 180, 255, 0.7);
-    transition: width 0.25s linear; /* ทำให้บาร์วิ่งสมูทตาม Love.css */
+    transition: width 0.25s linear; 
+    /* สำคัญ: กำหนด relative เพื่อให้หัววงกลมอิงตำแหน่งจากปลายหลอด */
+    position: relative; 
+  }
+
+  /* ❄️ สไตล์ของ "หัว" หลอดโหลด (วงกลม หรือ รูปภาพ) ❄️ */
+  .bar-head {
+    position: absolute;
+    right: -8px; /* จัดให้อยู่กึ่งกลางปลายหลอดพอดี */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* ขนาดของหัวหลอดโหลด */
+    width: 16px; 
+    height: 16px;
+    
+    /* --- แบบที่ 1: ใช้เป็นวงกลม (ค่าเริ่มต้น) --- */
+    border-radius: 50%; 
+    background-color: #ffffff; 
+    box-shadow: 0 0 10px #ffffff, 0 0 15px #5b8def;
+    
+    /* --- แบบที่ 2: หากต้องการใช้รูปภาพ ให้เอาเครื่องหมาย /* ด้านหน้าบรรทัดออก แล้วใส่ลิ้งค์รูป --- */
+    /* background-image: url('ใส่ URL รูปภาพตรงนี้'); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* background-color: transparent; */ /* ลบสีพื้นหลังวงกลมออก */
+    /* box-shadow: none; */ /* ลบเงาของวงกลมออก (หรือจะเก็บไว้ก็ได้) */
   }
 
   .status-text { 
     margin-top: 12px; 
     font-size: 12px; 
     letter-spacing: 1px; 
-    color: rgba(255,255,255,0.6); 
-    height: 16px; /* กันพื้นที่ไว้ไม่ให้กระตุกเวลาเปลี่ยนคำ */
+    color: rgba(255,255,255,0.45);
   }
 
   .bloom-btn {
@@ -318,15 +344,20 @@
     <div class="bud-emoji">❄️</div>
     
     <!-- ❄️ 2. แก้ไขหัวข้อหลักตรงนี้ ❄️ -->
-    <h2>Project M.6/9</h2>
+    <h2>Projace M.6/9</h2>
     
-    <div class="bar-track"><div class="bar-fill" id="progressBar"></div></div>
+    <div class="bar-track">
+      <div class="bar-fill" id="progressBar">
+        <!-- ❄️ ส่วนหัวของหลอดดาวน์โหลด ❄️ -->
+        <div class="bar-head"></div>
+      </div>
+    </div>
     
     <!-- ข้อความตรงนี้จะถูกควบคุมและเปลี่ยนโดย Javascript ด้านล่าง -->
     <div class="status-text" id="loadingText">Gathering snowflakes ...</div>
     
     <!-- ❄️ 3. แก้ไขข้อความปุ่มกดตรงนี้ ❄️ -->
-    <button class="bloom-btn" id="enterBtn" disabled>โหลดเสร็จเเล้วกดเลย!</button>
+    <button class="bloom-btn" id="enterBtn" disabled>กดเพื่อเข้าชม</button>
   </div>
 </div>
 <!-- --- สิ้นสุดส่วน HTML ของ Overlay --- -->
@@ -349,7 +380,7 @@
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
 
   <footer class="copyright">
-    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 ❄️ | สงวนลิขสิทธิ์ © All Rights Reserved
+    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 | สงวนลิขสิทธิ์ © All Rights Reserved
   </footer>
 </div>
 
@@ -422,7 +453,7 @@
       clearInterval(loadInterval);
       
       // ❄️ 5. แก้ไขข้อความเมื่อโหลดเสร็จเต็ม 100% ตรงนี้ ❄️
-      loadingText.textContent = 'Ready to explore 6/9 ❄️'; 
+      loadingText.textContent = 'โหลดเสร็จเเล้วกดได้เลย!!! ❄️'; 
       
       enterBtn.disabled = false;
       enterBtn.classList.add('ready');
