@@ -272,25 +272,25 @@
   /* ❄️ สไตล์ของ "หัว" หลอดโหลด (วงกลม หรือ รูปภาพ) ❄️ */
   .bar-head {
     position: absolute;
-    right: -8px; /* จัดให้อยู่กึ่งกลางปลายหลอดพอดี */
+    right: -12px; /* ปรับให้ตำแหน่งกึ่งกลางพอดีกับรูปที่ใหญ่ขึ้น */
     top: 50%;
     transform: translateY(-50%);
     
-    /* ขนาดของหัวหลอดโหลด */
-    width: 16px; 
-    height: 16px;
+    /* ขนาดของหัวหลอดโหลด (ปรับให้ใหญ่ขึ้นนิดหน่อยเพื่อเห็นรูปชัดขึ้น) */
+    width: 24px; 
+    height: 24px;
     
-    /* --- แบบที่ 1: ใช้เป็นวงกลม (ค่าเริ่มต้น) --- */
-    border-radius: 50%; 
-    background-color: #ffffff; 
-    box-shadow: 0 0 10px #ffffff, 0 0 15px #5b8def;
+    /* --- แบบที่ 2: ใช้รูปภาพ --- */
+    border-radius: 50%; /* ทำให้รูปเป็นวงกลม */
     
-    /* --- แบบที่ 2: หากต้องการใช้รูปภาพ ให้เอาเครื่องหมาย /* ด้านหน้าบรรทัดออก แล้วใส่ลิ้งค์รูป --- */
-    /* background-image: url('ใส่ URL รูปภาพตรงนี้'); */
-    /* background-size: cover; */
-    /* background-position: center; */
-    /* background-color: transparent; */ /* ลบสีพื้นหลังวงกลมออก */
-    /* box-shadow: none; */ /* ลบเงาของวงกลมออก (หรือจะเก็บไว้ก็ได้) */
+    /* 👇👇👇 เอาลิงก์รูปภาพ (URL) ของคุณมาใส่ตรงนี้ แทนที่ image_6b3024.png 👇👇👇 */
+    background-image: url('https://res.cloudinary.com/cr3qiibb/image/upload/v1787339234/%E0%B8%95%E0%B9%89%E0%B8%99%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_mzlyzk.png'); 
+    
+    background-size: cover; 
+    background-position: center 20%; /* ปรับโฟกัสไปที่ใบหน้า (บนนิดหน่อย) */
+    background-color: transparent; 
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(91, 141, 239, 0.6); /* เก็บเงาไว้ให้ดูโดดเด่น */
+    border: 1px solid #fff; /* เพิ่มขอบสีขาวบางๆ ให้รูปดูชัดเจนขึ้น */
   }
 
   .status-text { 
@@ -357,7 +357,7 @@
     <div class="status-text" id="loadingText">Gathering snowflakes ...</div>
     
     <!-- ❄️ 3. แก้ไขข้อความปุ่มกดตรงนี้ ❄️ -->
-    <button class="bloom-btn" id="enterBtn" disabled>กดเพื่อเข้าชม</button>
+    <button class="bloom-btn" id="enterBtn" disabled>กดเพื่อชม</button>
   </div>
 </div>
 <!-- --- สิ้นสุดส่วน HTML ของ Overlay --- -->
@@ -380,7 +380,7 @@
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
 
   <footer class="copyright">
-    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 | สงวนลิขสิทธิ์ © All Rights Reserved
+    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 ❄️ | สงวนลิขสิทธิ์ © All Rights Reserved
   </footer>
 </div>
 
