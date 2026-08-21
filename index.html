@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ม.6/9ปี69ดิ่วะ ❄️</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: radial-gradient(ellipse at top, #16234a 0%, #0a1230 55%, #060a1d 100%);
+    font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #eef3ff;
+  }
+  
+  #sky {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.85; }
+  }
+
+  .flake {
+    position: absolute;
+    top: -10%;
+    color: #eaf4ff;
+    text-shadow: 0 0 6px rgba(180, 210, 255, 0.6);
+    user-select: none;
+    pointer-events: none;
+    animation-name: fall, sway;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10vh); opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { transform: translateY(110vh); opacity: 0; }
+  }
+
+  @keyframes sway {
+    0%, 100% { margin-left: 0px; }
+    50% { margin-left: 40px; }
+  }
+
+  .stage {
+    position: relative;
+    z-index: 2;
+    min-height: 100dvh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px 56px;
+    text-align: center;
+  }
+
+  .frame {
+    position: relative;
+    width: min(86vw, 380px);
+    aspect-ratio: 3/4;
+    border-radius: 22px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 1px solid rgba(180, 205, 255, 0.25);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04),
+                0 20px 60px rgba(0,0,0,0.45),
+                0 0 40px rgba(120,160,255,0.12);
+    overflow: hidden;
+  }
+
+  .frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+
+  .frame img.show {
+    opacity: 1;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: clamp(20px, 5vw, 26px);
+    margin: 26px 0 6px;
+    letter-spacing: 0.3px;
+    color: #f4f8ff;
+  }
+
+  p.sub {
+    margin: 0 0 26px;
+    color: #9fb3e0;
+    font-size: 14.5px;
+  }
+
+  .btn {
+    position: relative;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 14px 34px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #0b1330;
+    background: linear-gradient(180deg, #eaf3ff, #cfe0ff);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(140,180,255,0.35), 0 0 0 1px rgba(255,255,255,0.5) inset;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 999px;
+    box-shadow: 0 0 30px 6px rgba(150,190,255,0.35);
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+
+  .btn.pulse::after {
+    opacity: 1;
+    animation: pulseGlow 1.2s ease-out;
+  }
+
+  @keyframes pulseGlow {
+    0% { opacity: 0.9; transform: scale(0.9); }
+    100% { opacity: 0; transform: scale(1.5); }
+  }
+
+  #bg-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(100px, 30vw, 300px);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.05); /* จางๆ */
+    z-index: 1; /* ให้อยู่หลังเวที (stage) แต่เหนือท้องฟ้า (sky) */
+    pointer-events: none; /* ไม่ให้กั้นการคลิก */
+    opacity: 0;
+    transition: opacity 2s ease-in-out; /* ค่อยๆ ปรากฏขึ้นมาอย่างช้าๆ */
+    white-space: nowrap;
+  }
+
+  #bg-text.show {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div id="sky"></div>
+<div id="bg-text">6/9</div>
+
+<div class="stage">
+  <div class="frame" id="frame">
+    <!-- ใส่ URL รูปที่ 1 (แสดงก่อนกดปุ่ม) ตรงนี้ -->
+    <img id="img1" alt="รูปที่ 1" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321902/MY_G_yf7gtd.png">
+    
+    <!-- ใส่ URL รูปที่ 2 (แสดงหลังกดปุ่ม) ตรงนี้ -->
+    <img id="img2" alt="รูปที่ 2" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321899/%E0%B8%A3%E0%B8%A7%E0%B8%A1_zialia.jpg">
+  </div>
+
+  <h1>6/9 on the top ❄️</h1>
+  <p class="sub" id="subTitle">กดปุ่มด้านล่าง แล้วดูว่าจะเกิดอะไรขึ้น</p>
+
+  <button class="btn" id="revealBtn">กดตรงนี้</button>
+
+  <!-- ใส่ URL ไฟล์เพลง MP3 ตรงนี้ -->
+  <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var sky = document.getElementById('sky');
+
+  // สร้างดาวกระพริบพื้นหลัง
+  for (var i = 0; i < 30; i++) {
+    var star = document.createElement('div');
+    star.className = 'star';
+    var size = Math.random() * 2 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = (Math.random() * 100) + 'vw';
+    star.style.top = (Math.random() * 60) + 'vh';
+    star.style.animationDelay = (Math.random() * 3) + 's';
+    sky.appendChild(star);
+  }
+
+  // สร้างเอฟเฟกต์หิมะอีโมจิตกลงมาอย่างสมูท
+  var flakeChars = ['❄', '❅', '❆'];
+  var flakeCount = 36;
+  
+  for (var j = 0; j < flakeCount; j++) {
+    var flake = document.createElement('div');
+    flake.className = 'flake';
+    flake.textContent = flakeChars[Math.floor(Math.random() * flakeChars.length)];
+    var fsize = Math.random() * 16 + 12;
+    flake.style.left = (Math.random() * 100) + 'vw';
+    flake.style.fontSize = fsize + 'px';
+    flake.style.opacity = (Math.random() * 0.5 + 0.4).toFixed(2);
+    
+    var fallDur = (Math.random() * 8 + 9).toFixed(1);
+    var swayDur = (Math.random() * 3 + 2.5).toFixed(1);
+    
+    flake.style.animationDuration = fallDur + 's, ' + swayDur + 's';
+    flake.style.animationDelay = (Math.random() * fallDur * -1) + 's, ' + (Math.random() * swayDur * -1) + 's';
+    sky.appendChild(flake);
+  }
+
+  var img1 = document.getElementById('img1');
+  var img2 = document.getElementById('img2');
+  var bgm = document.getElementById('bgm');
+  var btn = document.getElementById('revealBtn');
+  var subTitle = document.getElementById('subTitle');
+
+  // แสดงรูปที่ 1 เป็นค่าเริ่มต้น
+  img1.classList.add('show');
+
+  var revealed = false;
+
+  function handleReveal() {
+    if (revealed) return;
+    revealed = true;
+
+    // เล่นเพลงทันที (รองรับ iOS Autoplay policy เมื่อถูกเรียกผ่าน click/touch)
+    if (bgm) {
+      bgm.volume = 1.0;
+      var playPromise = bgm.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(err) {
+          console.log('Audio play failed:', err);
+        });
+      }
+    }
+
+    // สลับรูปภาพจาก รูปที่ 1 -> รูปที่ 2
+    img2.classList.add('show');
+    img1.classList.remove('show');
+
+    // เปลี่ยนข้อความบรรยายใหม่เมื่อแสดงรูปที่ 2
+    if (subTitle) {
+      subTitle.textContent = 'จัดโครงการทีปังกรคัพสำเร็จ!!!';
+    }
+
+    // เอฟเฟกต์ปุ่ม
+    btn.classList.add('pulse');
+    btn.textContent = ' BOOM! ❄️';
+    setTimeout(function() {
+      btn.classList.remove('pulse');
+    }, 1300);
+
+    // ปล่อยหิมะระเบิดออกมาเพิ่ม
+    burstSnow();
+  }
+
+  btn.addEventListener('click', handleReveal);
+
+  function burstSnow() {
+    for (var k = 0; k < 28; k++) {
+      var extraFlake = document.createElement('div');
+      extraFlake.className = 'flake';
+      extraFlake.textContent = flakeChars[Math.floor(Math.random() * flakeChars.length)];
+      var fsize = Math.random() * 18 + 14;
+      extraFlake.style.left = (Math.random() * 100) + 'vw';
+      extraFlake.style.fontSize = fsize + 'px';
+      extraFlake.style.opacity = (Math.random() * 0.5 + 0.5).toFixed(2);
+      
+      var fallDur = (Math.random() * 5 + 5).toFixed(1);
+      var swayDur = (Math.random() * 2 + 2).toFixed(1);
+      
+      extraFlake.style.animationDuration = fallDur + 's, ' + swayDur + 's';
+      sky.appendChild(extraFlake);
+
+      (function(el, dur) {
+        setTimeout(function() {
+          if (el && el.parentNode) {
+            el.parentNode.removeChild(el);
+          }
+        }, dur * 1000 + 200);
+      })(extraFlake, parseFloat(fallDur));
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
