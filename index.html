@@ -97,7 +97,9 @@
                 0 20px 60px rgba(0,0,0,0.45),
                 0 0 40px rgba(120,160,255,0.12);
     overflow: hidden;
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* ปรับจังหวะให้เด้งเร็วขึ้นนิดหน่อย เพื่อลดภาระเครื่อง */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform;
   }
 
   .frame img {
@@ -107,17 +109,15 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    /* เอฟเฟกต์ตอนภาพซ่อน: ขยายใหญ่ขึ้น, เบลอ, และสว่างขึ้น (เหมือนน้ำแข็งเกาะ) */
-    transform: scale(1.15);
-    filter: blur(12px) brightness(1.5);
-    transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1s ease;
+    /* เอา filter blur ออกเพราะทำมือถือแลค เปลี่ยนมาใช้แค่ซูมเบาๆ */
+    transform: scale(1.05);
+    transition: opacity 0.6s ease, transform 0.8s ease-out;
+    will-change: transform, opacity;
   }
 
   .frame img.show {
     opacity: 1;
-    /* เอฟเฟกต์ตอนภาพแสดง: กลับสู่ขนาดปกติและชัดเจน */
     transform: scale(1);
-    filter: blur(0px) brightness(1);
   }
 
   /* เอฟเฟกต์แสงวาบพายุหิมะ (Blizzard Flash) */
@@ -538,13 +538,14 @@
       // ปล่อยหิมะระเบิดออกมาเพิ่ม
       burstSnow();
 
-    }, 250);
+    }, 200); /* ลดเวลาลงนิดหน่อยให้ไวขึ้น */
   }
 
   btn.addEventListener('click', handleReveal);
 
   function burstSnow() {
-    for (var k = 0; k < 35; k++) {
+    /* ลดจำนวนหิมะลงจาก 35 เหลือ 20 ป้องกันมือถืองานหนักเกินไปจังหวะสลับรูป */
+    for (var k = 0; k < 20; k++) {
       var extraFlake = document.createElement('div');
       extraFlake.className = 'flake';
       extraFlake.textContent = flakeChars[Math.floor(Math.random() * flakeChars.length)];
