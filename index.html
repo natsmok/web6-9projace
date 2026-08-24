@@ -73,10 +73,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 32px 20px 56px;
+    justify-content: flex-start;
+    padding: 70px 20px 56px;
     text-align: center;
-    opacity: 0; /* ซ่อนเนื้อหาหลักไว้ก่อน */
+    opacity: 0;
     visibility: hidden;
     transition: opacity 1s ease, visibility 1s ease;
   }
@@ -84,6 +84,60 @@
   .stage.active {
     opacity: 1;
     visibility: visible;
+  }
+
+  /* เมนูเลือกหมวดหมู่ */
+  .category-tabs {
+    display: flex;
+    gap: 10px;
+    background: rgba(15, 25, 55, 0.65);
+    padding: 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(180, 205, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .tab-btn {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #9fb3e0;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, #3b74e6, #6b9cf2);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(91, 141, 239, 0.4);
+  }
+
+  .tab-content {
+    display: none;
+    width: 100%;
+    max-width: 800px;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInTab 0.4s ease forwards;
+  }
+
+  .tab-content.active {
+    display: flex;
+  }
+
+  @keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .frame {
@@ -97,7 +151,6 @@
                 0 20px 60px rgba(0,0,0,0.45),
                 0 0 40px rgba(120,160,255,0.12);
     overflow: hidden;
-    /* ปรับจังหวะให้เด้งเร็วขึ้นนิดหน่อย เพื่อลดภาระเครื่อง */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     will-change: transform;
   }
@@ -109,7 +162,6 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    /* เอา filter blur ออกเพราะทำมือถือแลค เปลี่ยนมาใช้แค่ซูมเบาๆ */
     transform: scale(1.05);
     transition: opacity 0.6s ease, transform 0.8s ease-out;
     will-change: transform, opacity;
@@ -120,7 +172,6 @@
     transform: scale(1);
   }
 
-  /* เอฟเฟกต์แสงวาบพายุหิมะ (Blizzard Flash) */
   .blizzard-flash {
     position: absolute;
     inset: 0;
@@ -133,19 +184,19 @@
 
   .blizzard-flash.active {
     opacity: 1;
-    transition: opacity 0.15s ease-in; /* สว่างวาบอย่างรวดเร็ว */
+    transition: opacity 0.15s ease-in;
   }
 
   h1 {
     font-weight: 600;
     font-size: clamp(20px, 5vw, 26px);
-    margin: 26px 0 6px;
+    margin: 22px 0 6px;
     letter-spacing: 0.3px;
     color: #f4f8ff;
   }
 
   p.sub {
-    margin: 0 0 26px;
+    margin: 0 0 22px;
     color: #9fb3e0;
     font-size: 14.5px;
   }
@@ -192,6 +243,141 @@
     100% { opacity: 0; transform: scale(1.5); }
   }
 
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 10px 0 20px;
+    text-shadow: 0 0 12px rgba(140, 180, 255, 0.6);
+  }
+
+  .two-frames-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    padding: 10px 4px;
+  }
+
+  .photo-frame {
+    background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 1px solid rgba(180, 205, 255, 0.25);
+    border-radius: 22px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(85vw, 280px); /* Responsive width */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .photo-frame:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(91, 141, 239, 0.35);
+    border-color: rgba(140, 180, 255, 0.7);
+  }
+
+  .frame-image-wrapper {
+    width: 100%;
+    aspect-ratio: 3/4; /* Nice portrait frame aspect ratio */
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+  }
+
+  .frame-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .photo-frame:hover .frame-image-wrapper img {
+    transform: scale(1.08);
+  }
+
+  .name-box {
+    background: linear-gradient(135deg, #3b74e6, #6b9cf2);
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 16px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(91, 141, 239, 0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+  }
+
+  .modal-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(3, 6, 18, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .modal-lightbox.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-img-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 70vh;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(120, 160, 255, 0.4);
+    border: 1px solid rgba(180, 205, 255, 0.3);
+  }
+
+  .modal-img-container img {
+    width: 100%;
+    height: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+  }
+
+  .modal-caption {
+    margin-top: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .modal-close-btn {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .modal-close-btn:hover {
+    background: rgba(255,255,255,0.3);
+  }
+
   @keyframes textBlink {
     0%, 100% {
       opacity: 1;
@@ -204,7 +390,7 @@
   }
 
   .copyright {
-    margin-top: 28px;
+    margin-top: 36px;
     font-size: 12.5px;
     color: #dbe7ff;
     letter-spacing: 0.5px;
@@ -212,11 +398,8 @@
     animation: textBlink 2.2s ease-in-out infinite;
   }
 
-  #bg-text {
-      display: none;
-  }
+  #bg-text { display: none; }
 
-  /* --- เริ่มส่วนสไตล์ของ Overlay --- */
   .overlay {
     position: fixed;
     inset: 0;
@@ -247,9 +430,7 @@
     transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .overlay.hidden .card {
-      transform: translateY(-30px);
-  }
+  .overlay.hidden .card { transform: translateY(-30px); }
 
   .bud-emoji {
     font-size: 46px; 
@@ -335,15 +516,9 @@
     cursor: pointer;
   }
 
-  .bloom-btn.ready:hover {
-    box-shadow: 0 6px 25px rgba(140, 180, 255, 0.5);
-  }
+  .bloom-btn.ready:hover { box-shadow: 0 6px 25px rgba(140, 180, 255, 0.5); }
+  .bloom-btn.ready:active { transform: scale(0.97); }
 
-  .bloom-btn.ready:active { 
-    transform: scale(0.97); 
-  }
-
-  /* สไตล์ส่วนตัวนับจำนวนผู้เข้าชม (ย้ายไปไว้ขวาบน) */
   .view-counter {
     position: fixed;
     top: max(16px, env(safe-area-inset-top));
@@ -362,13 +537,13 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    opacity: 0; /* ซ่อนไว้ก่อนตอนเริ่มต้น */
+    opacity: 0;
     visibility: hidden;
     transition: opacity 1s ease, visibility 1s ease;
   }
 
   .view-counter.show {
-    opacity: 1; /* แสดงผลเมื่อใส่คลาส show */
+    opacity: 1;
     visibility: visible;
   }
 
@@ -378,12 +553,11 @@
     text-shadow: 0 0 8px rgba(140, 180, 255, 0.8);
   }
 
-  /* --- ฉากเปลี่ยนผ่าน 6/9 Geometric --- */
   #transitionScreen {
     position: fixed;
     inset: 0;
-    background-color: #030612; /* ดำสนิทอมน้ำเงินให้ดูเป็นอวกาศ/เทคโนโลยี */
-    z-index: 999; /* สูงสุดเพื่อบังทุกอย่างตอนกำลังวาด */
+    background-color: #030612;
+    z-index: 999;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -403,12 +577,10 @@
     overflow: visible;
   }
 
-  /* ความยาวเส้นแต่ละส่วนสำหรับการทำแอนิเมชันวาดรูป */
   .path-stem { stroke-dasharray: 150; stroke-dashoffset: 150; }
   .path-loop { stroke-dasharray: 260; stroke-dashoffset: 260; }
   .path-slash { stroke-dasharray: 180; stroke-dashoffset: 180; }
 
-  /* แอนิเมชันการวาดเส้น */
   #transitionScreen.active .stem-6,
   #transitionScreen.active .stem-9 {
     animation: drawGeoLine 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -426,7 +598,6 @@
     animation-delay: 2.4s;
   }
 
-  /* เส้นประตกแต่งแบคกราวด์ */
   .geo-accent {
     stroke-dasharray: 3 12;
     stroke-dashoffset: 100;
@@ -441,18 +612,9 @@
   #accent6 { transform-origin: 100px 130px; }
   #accent9 { transform-origin: 300px 70px; }
 
-  @keyframes drawGeoLine {
-    to { stroke-dashoffset: 0; }
-  }
-
-  @keyframes fadeAccent {
-    to { opacity: 0.5; stroke-dashoffset: 0; }
-  }
-
-  @keyframes spinAccent {
-    100% { transform: rotate(360deg); }
-  }
-  /* --- สิ้นสุดส่วนสไตล์ของ Overlay --- */
+  @keyframes drawGeoLine { to { stroke-dashoffset: 0; } }
+  @keyframes fadeAccent { to { opacity: 0.5; stroke-dashoffset: 0; } }
+  @keyframes spinAccent { 100% { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -460,7 +622,6 @@
 <div id="sky"></div>
 <div id="bg-text">ปี69</div>
 
-<!-- แสดงสถิติผู้เข้าชม (ย้ายอยู่นอกสุดเพื่อให้อยู่กับที่ตลอดเวลา) -->
 <div class="view-counter">
   <span>👁️ เข้าชมแล้ว</span>
   <span id="viewCount">...</span>
@@ -481,11 +642,9 @@
   </div>
 </div>
 
-<!-- เพิ่มหน้าจอ Transition Screen สีดำวาดเลขเรขาคณิตตรงนี้ -->
 <div id="transitionScreen">
   <svg viewBox="0 0 400 200" class="geo-svg">
     <defs>
-      <!-- เอฟเฟกต์แสงนีออนเรืองแสง -->
       <filter id="neon-glow" x="-30%" y="-30%" width="160%" height="160%">
         <feGaussianBlur stdDeviation="4" result="blur" />
         <feMerge>
@@ -493,7 +652,6 @@
           <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
-      <!-- ไล่สีเส้น -->
       <linearGradient id="geo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#5b8def" />
         <stop offset="50%" stop-color="#a4c2ff" />
@@ -501,46 +659,80 @@
       </linearGradient>
     </defs>
     
-    <!-- วงกลมประดับ (Accents) -->
     <g stroke="#7da5f2" stroke-width="1.5" fill="none" stroke-linecap="round">
       <circle id="accent6" class="geo-accent" cx="100" cy="130" r="55" />
       <circle id="accent9" class="geo-accent" cx="300" cy="70" r="55" />
     </g>
 
-    <!-- เส้นเรขาคณิตหลัก 6/9 -->
     <g stroke="url(#geo-gradient)" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#neon-glow)">
-      <!-- เลข 6 (ก้าน) -->
       <path class="path-stem stem-6" d="M 120,30 Q 60,30 60,130" />
-      <!-- เลข 6 (วงกลม) -->
       <circle class="path-loop loop-6" cx="100" cy="130" r="40" />
-      
-      <!-- ขีดกลาง / -->
       <line class="path-slash" x1="180" y1="180" x2="220" y2="20" />
-      
-      <!-- เลข 9 (ก้าน) -->
       <path class="path-stem stem-9" d="M 280,170 Q 340,170 340,70" />
-      <!-- เลข 9 (วงกลม) -->
       <circle class="path-loop loop-9" cx="300" cy="70" r="40" />
     </g>
   </svg>
 </div>
 
 <div class="stage" id="mainStage">
-  <div class="frame" id="frame">
-    <!-- ภาพที่ 1 -->
-    <img id="img1" alt="รูปที่ 1" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321902/MY_G_yf7gtd.png">
-    <!-- ภาพที่ 2 -->
-    <img id="img2" alt="รูปที่ 2" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321899/%E0%B8%A3%E0%B8%A7%E0%B8%A1_zialia.jpg">
-    <!-- เลเยอร์เอฟเฟกต์แสงวาบ -->
-    <div id="blizzardFlash" class="blizzard-flash"></div>
+
+  <!-- แท็บเมนูสลับหมวดหมู่ -->
+  <div class="category-tabs">
+    <button class="tab-btn active" data-tab="memoriesTab">
+      <span>❄️</span> หน้าหลัก
+    </button>
+    <button class="tab-btn" data-tab="friendsTab">
+      <span>👑</span> หัวหน้าห้อง
+    </button>
   </div>
 
-  <h1>6/9 on the top ❄️</h1>
-  <p class="sub" id="subTitle">กดปุ่มด้านล่างดูสิ!!!</p>
+  <!-- หมวดหมู่ที่ 1: หน้าหลัก / รูปภาพความทรงจำ -->
+  <div class="tab-content active" id="memoriesTab">
+    <div class="frame" id="frame">
+      <!-- ภาพที่ 1 -->
+      <img id="img1" alt="รูปที่ 1" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321902/MY_G_yf7gtd.png">
+      <!-- ภาพที่ 2 -->
+      <img id="img2" alt="รูปที่ 2" src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787321899/%E0%B8%A3%E0%B8%A7%E0%B8%A1_zialia.jpg">
+      <div id="blizzardFlash" class="blizzard-flash"></div>
+    </div>
 
-  <button class="btn" id="revealBtn">BOOM! ❄️</button>
+    <h1>6/9 on the top ❄️</h1>
+    <p class="sub" id="subTitle">กดปุ่มด้านล่างดูสิ!!!</p>
 
-  <!-- ใส่ URL ไฟล์เพลง MP3 ตรงนี้ -->
+    <button class="btn" id="revealBtn">BOOM! ❄️</button>
+  </div>
+
+  <!-- หมวดหมู่ที่ 2: หัวหน้าห้อง (กรอบรูปภาพ 2 กรอบพร้อมกล่องข้อความชื่อ) -->
+  <div class="tab-content" id="friendsTab">
+    <div class="section-title">👑 หัวหน้าห้อง & รองหัวหน้า ชั้น ม.6/9</div>
+    
+    <div class="two-frames-container">
+      
+      <!-- =================================================== -->
+      <!-- กรอบรูปที่ 1 (เปลี่ยนรูปและชื่อได้ตรงนี้) -->
+      <!-- =================================================== -->
+      <div class="photo-frame" onclick="openLightbox('https://placehold.co/600x800/16234a/ffffff?text=Photo+1', 'ใส่ชื่อที่นี่ 1')">
+        <div class="frame-image-wrapper">
+          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg" alt="รูปที่ 1">
+        </div>
+        <!-- กล่องข้อความชื่อ -->
+        <div class="name-box">หัวหน้าห้อง-ต้นกล้า</div>
+      </div>
+
+      <!-- =================================================== -->
+      <!-- กรอบรูปที่ 2 (เปลี่ยนรูปและชื่อได้ตรงนี้) -->
+      <!-- =================================================== -->
+      <div class="photo-frame" onclick="openLightbox('https://placehold.co/600x800/16234a/ffffff?text=Photo+2', 'ใส่ชื่อที่นี่ 2')">
+        <div class="frame-image-wrapper">
+          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg" alt="รูปที่ 2">
+        </div>
+        <!-- กล่องข้อความชื่อ -->
+        <div class="name-box">รองหัวหน้า-เเบ้ค</div>
+      </div>
+
+    </div>
+  </div>
+
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
 
   <footer class="copyright">
@@ -548,7 +740,15 @@
   </footer>
 </div>
 
-<!-- ระบบเก็บบันทึกสถิติผู้เข้าชม Real-time -->
+<!-- Lightbox เปิดดูรูปเพื่อนขยายใหญ่ -->
+<div class="modal-lightbox" id="lightboxModal">
+  <div class="modal-img-container">
+    <img id="lightboxImg" src="" alt="ขยายรูป">
+  </div>
+  <div class="modal-caption" id="lightboxCaption"></div>
+  <button class="modal-close-btn" onclick="closeLightbox()">ปิดหน้าต่าง ✕</button>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
   import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -561,7 +761,6 @@
     ? JSON.parse(__firebase_config) 
     : null;
 
-  // ฟังก์ชันสถิติตัวนับสำรอง (Global Cloud Counter) สำหรับใช้งานภายนอกระบบ หรือเมื่อ Firebase เชื่อมต่อไม่ได้
   async function updateFallbackCounter() {
     try {
       const res = await fetch('https://api.counterapi.dev/v1/m69_class_69_project_2026/views/up');
@@ -577,7 +776,6 @@
       console.warn("Global Counter API connection fallback:", e);
     }
 
-    // สำรองระดับสุดท้ายกรณีออฟไลน์
     try {
       let localCount = parseInt(localStorage.getItem('m69_page_views') || '12', 10) + 1;
       localStorage.setItem('m69_page_views', localCount);
@@ -607,11 +805,8 @@
       }
 
       const statsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'view_stats', 'counter');
-
-      // อัปเดตเพิ่มจำนวนผู้เข้าชม (+1)
       await setDoc(statsDocRef, { views: increment(1) }, { merge: true });
 
-      // ดึงข้อมูลและอัปเดตการแสดงผลแบบ Real-time
       onSnapshot(statsDocRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -640,7 +835,6 @@
 
   var sky = document.getElementById('sky');
 
-  // สร้างดาวกระพริบพื้นหลัง
   for (var i = 0; i < 30; i++) {
     var star = document.createElement('div');
     star.className = 'star';
@@ -653,7 +847,6 @@
     sky.appendChild(star);
   }
 
-  // สร้างเอฟเฟกต์หิมะอีโมจิตกลงมาอย่างสมูท
   var flakeChars = ['❄', '❅', '❆'];
   var flakeCount = 36;
 
@@ -712,7 +905,6 @@
     progressBar.style.width = progress + '%';
   }, 220); 
 
-  // ฟังก์ชันสร้างเสียงเอฟเฟกต์ระดับภาพยนตร์ Sci-Fi 5 เลเยอร์ (Cinematic Web Audio API)
   function playNeonDrawSound() {
     try {
       var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -724,7 +916,6 @@
 
       var now = ctx.currentTime;
 
-      // Layer 1: Sub-Bass Impact (เบสแน่นๆ เปิดตัวอารมณ์หนัง Sci-Fi)
       var subOsc = ctx.createOscillator();
       var subGain = ctx.createGain();
       subOsc.type = 'sine';
@@ -737,7 +928,6 @@
       subOsc.start(now);
       subOsc.stop(now + 1.5);
 
-      // Layer 2: White Noise Whoosh (เสียงชาร์จพลังงานวูบวาบ)
       var bufferSize = ctx.sampleRate * 4.2;
       var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       var data = buffer.getChannelData(0);
@@ -763,7 +953,6 @@
       noiseGain.connect(ctx.destination);
       noise.start(now);
 
-      // Layer 3: Neon Laser Harmonics (เสียงนีออนสังเคราะห์เลเซอร์ลากเส้น)
       var freqs = [110, 164.81, 220, 329.63];
       freqs.forEach(function(freq, index) {
         var osc = ctx.createOscillator();
@@ -799,7 +988,6 @@
         osc.stop(now + 4.3);
       });
 
-      // Layer 4: Crystal Shimmer Chimes (เสียงประกายคริสตัลตอนวาดเสร็จ)
       var chimes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
       chimes.forEach(function(noteFreq, idx) {
         var startTime = now + 2.4 + (idx * 0.18);
@@ -820,7 +1008,6 @@
         chimeOsc.stop(startTime + 0.9);
       });
 
-      // Layer 5: Final Climax Boom (เสียงเบสส่งท้ายก่อนเปิดรูปภาพ)
       var boomOsc = ctx.createOscillator();
       var boomGain = ctx.createGain();
       boomOsc.type = 'sine';
@@ -847,13 +1034,10 @@
       var transitionScreen = document.getElementById('transitionScreen');
       var viewCounter = document.querySelector('.view-counter');
 
-      // เรียกใช้เสียงเอฟเฟกต์ล้ำๆ ทันทีที่กดปุ่ม!
       playNeonDrawSound();
 
-      // 1. เรียกหน้าจอดำ transition ขึ้นมาทับทุกอย่าง
       transitionScreen.classList.add('active');
 
-      // 2. แอบซ่อนหน้า Loading ไว้ข้างหลังแบบเงียบๆ
       setTimeout(function() {
           introOverlay.classList.add('hidden');
           setTimeout(function() {
@@ -861,11 +1045,10 @@
           }, 600);
       }, 300); 
 
-      // 3. รอให้แอนิเมชันวาดเส้น 6/9 วาดเสร็จและโชว์ความเท่ (ใช้เวลาประมาณ 4.5 วินาที)
       setTimeout(function() {
-          mainStage.classList.add('active'); // เตรียมฉากหลัก
-          transitionScreen.classList.remove('active'); // เฟดหน้าจอดำออกเพื่อเผยภาพ
-          if (viewCounter) viewCounter.classList.add('show'); // แสดงยอดคนดูตรงนี้
+          mainStage.classList.add('active');
+          transitionScreen.classList.remove('active');
+          if (viewCounter) viewCounter.classList.add('show');
           
           setTimeout(function() {
               transitionScreen.style.display = 'none'; 
@@ -881,7 +1064,6 @@
   var btn = document.getElementById('revealBtn');
   var subTitle = document.getElementById('subTitle');
 
-  // แสดงรูปที่ 1 เป็นค่าเริ่มต้น
   img1.classList.add('show');
 
   var revealed = false;
@@ -890,7 +1072,6 @@
     if (revealed) return;
     revealed = true;
 
-    // เล่นเพลง
     if (bgm) {
       bgm.volume = 1.0;
       var playPromise = bgm.play();
@@ -901,58 +1082,47 @@
       }
     }
 
-    // 1. เริ่มเอฟเฟกต์แสงวาบ และให้กรอบยุบตัวลงนิดนึง (เตรียมระเบิด)
     blizzardFlash.classList.add('active');
     frame.style.transform = 'scale(0.95)';
 
-    // 2. ตั้งเวลาสลับภาพในจังหวะที่แสงสว่างวาบที่สุด (ประมาณ 250ms)
     setTimeout(function() {
-      
-      // สลับรูปภาพ
       img2.classList.add('show');
       img1.classList.remove('show');
-      
-      // ให้กรอบเด้งกลับมาขนาดปกติ
       frame.style.transform = 'scale(1)';
       
       if (subTitle) {
         subTitle.textContent = 'จัดทำโครงการสำเร็จ!!!';
       }
 
-      // 3. ตั้งเวลาเอาแสงวาบออก เพื่อเผยให้เห็นภาพใหม่ที่ค่อยๆ ชัดขึ้น
       setTimeout(function() {
          blizzardFlash.classList.remove('active');
       }, 200);
 
-      // เอฟเฟกต์ปุ่ม
       btn.classList.add('pulse');
       btn.textContent = ' 17 สิงหาคม 2569';
       setTimeout(function() {
         btn.classList.remove('pulse');
       }, 1300);
 
-      // ปล่อยหิมะระเบิดออกมาเพิ่ม
       burstSnow();
-
-    }, 200); /* ลดเวลาลงนิดหน่อยให้ไวขึ้น */
+    }, 200);
   }
 
   btn.addEventListener('click', handleReveal);
 
   function burstSnow() {
-    /* ลดจำนวนหิมะลงจาก 35 เหลือ 20 ป้องกันมือถืองานหนักเกินไปจังหวะสลับรูป */
     for (var k = 0; k < 20; k++) {
       var extraFlake = document.createElement('div');
       extraFlake.className = 'flake';
       extraFlake.textContent = flakeChars[Math.floor(Math.random() * flakeChars.length)];
       var fsize = Math.random() * 18 + 14;
       extraFlake.style.left = (Math.random() * 100) + 'vw';
-      extraFlake.style.top = '10vh'; // ให้เริ่มจากใกล้ๆ กรอบรูป
+      extraFlake.style.top = '10vh';
       extraFlake.style.fontSize = fsize + 'px';
       extraFlake.style.opacity = (Math.random() * 0.5 + 0.5).toFixed(2);
       extraFlake.style.textShadow = '0 0 10px rgba(255,255,255,0.8)';
 
-      var fallDur = (Math.random() * 4 + 4).toFixed(1); // ตกเร็วขึ้นนิดนึง
+      var fallDur = (Math.random() * 4 + 4).toFixed(1);
       var swayDur = (Math.random() * 2 + 2).toFixed(1);
 
       extraFlake.style.animationDuration = fallDur + 's, ' + swayDur + 's';
@@ -967,7 +1137,43 @@
       })(extraFlake, parseFloat(fallDur));
     }
   }
+
+  // ระบบสลับหมวดหมู่ Tab Navigation
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  var tabContents = document.querySelectorAll('.tab-content');
+
+  tabBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var targetTabId = btn.getAttribute('data-tab');
+
+      tabBtns.forEach(function(b) { b.classList.remove('active'); });
+      tabContents.forEach(function(c) { c.classList.remove('active'); });
+
+      btn.classList.add('active');
+      document.getElementById(targetTabId).classList.add('active');
+    });
+  });
+
 })();
+
+// ฟังก์ชัน Lightbox สำหรับดูรูปขยาย (รองรับรูปในหน้าเพื่อนๆ ด้วย)
+window.openLightbox = function(imgUrl, captionText) {
+  var modal = document.getElementById('lightboxModal');
+  var img = document.getElementById('lightboxImg');
+  var caption = document.getElementById('lightboxCaption');
+  if(modal && img && caption) {
+    img.src = imgUrl;
+    caption.textContent = captionText;
+    modal.classList.add('active');
+  }
+};
+
+window.closeLightbox = function() {
+  var modal = document.getElementById('lightboxModal');
+  if(modal) {
+    modal.classList.remove('active');
+  }
+};
 </script>
 
 <script>
