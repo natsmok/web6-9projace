@@ -348,7 +348,7 @@
     position: fixed;
     top: max(16px, env(safe-area-inset-top));
     right: 16px;
-    z-index: 5;
+    z-index: 100;
     font-size: 12.5px;
     color: #c2d6ff;
     display: inline-flex;
@@ -376,6 +376,13 @@
 
 <div id="sky"></div>
 <div id="bg-text">ปี69</div>
+
+<!-- แสดงสถิติผู้เข้าชม (ย้ายอยู่นอกสุดเพื่อให้อยู่กับที่ตลอดเวลา) -->
+<div class="view-counter">
+  <span>👁️ เข้าชมแล้ว</span>
+  <span id="viewCount">...</span>
+  <span>ครั้ง</span>
+</div>
 
 <div class="overlay" id="introOverlay">
   <div class="card">
@@ -408,13 +415,6 @@
 
   <!-- ใส่ URL ไฟล์เพลง MP3 ตรงนี้ -->
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
-
-  <!-- แสดงสถิติผู้เข้าชม -->
-  <div class="view-counter">
-    <span>👁️ เข้าชมแล้ว</span>
-    <span id="viewCount">...</span>
-    <span>ครั้ง</span>
-  </div>
 
   <footer class="copyright">
     สร้างสรรค์โดย ชั้น ม.6/9 ปี69 ❄️ | สงวนลิขสิทธิ์ © All Rights Reserved
