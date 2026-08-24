@@ -242,6 +242,47 @@
     100% { opacity: 0; transform: scale(1.5); }
   }
 
+  .audio-toggle {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top));
+    right: 16px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(15, 25, 55, 0.7);
+    border: 1px solid rgba(180, 205, 255, 0.4);
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 15px rgba(91, 141, 239, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px) scale(0.8);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .audio-toggle.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .audio-toggle:hover {
+    background: rgba(59, 116, 230, 0.9);
+    transform: translateY(-3px) scale(1.05);
+  }
+
+  .audio-toggle:active {
+    transform: translateY(0) scale(0.95);
+  }
+
   .section-title {
     font-size: 20px;
     font-weight: 700;
@@ -267,7 +308,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: min(85vw, 280px); /* Responsive width */
+    width: min(85vw, 280px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     backdrop-filter: blur(8px);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.3s ease;
@@ -282,7 +323,7 @@
 
   .frame-image-wrapper {
     width: 100%;
-    aspect-ratio: 3/4; /* Nice portrait frame aspect ratio */
+    aspect-ratio: 3/4;
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 18px;
@@ -304,7 +345,7 @@
   .info-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 18, 48, 0.85); /* สีน้ำเงินเข้มโปร่งแสง */
+    background: rgba(10, 18, 48, 0.85);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     display: flex;
@@ -640,7 +681,7 @@
   .view-counter {
     position: fixed;
     top: max(16px, env(safe-area-inset-top));
-    right: 16px;
+    left: 16px;
     z-index: 100;
     font-size: 12.5px;
     color: #c2d6ff;
@@ -900,6 +941,9 @@
   <div class="modal-caption" id="lightboxCaption"></div>
   <button class="modal-close-btn" onclick="closeLightbox()">ปิดหน้าต่าง ✕</button>
 </div>
+
+<!-- ปุ่มสำหรับควบคุมการเปิด/ปิดเพลง (ซ่อนไว้ก่อน) -->
+<button id="audioToggleBtn" class="audio-toggle" title="เปิด/ปิดเสียง">🔊</button>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -1215,6 +1259,7 @@
   var bgm = document.getElementById('bgm');
   var btn = document.getElementById('revealBtn');
   var subTitle = document.getElementById('subTitle');
+  var audioToggleBtn = document.getElementById('audioToggleBtn'); // อ้างอิงปุ่มเปิดปิดเสียง
 
   img1.classList.add('show');
 
@@ -1224,6 +1269,7 @@
     if (revealed) return;
     revealed = true;
 
+    // เล่นเพลง
     if (bgm) {
       bgm.volume = 1.0;
       var playPromise = bgm.play();
@@ -1231,6 +1277,11 @@
         playPromise.catch(function(err) {
           console.log('Audio play failed:', err);
         });
+      }
+      
+      // แสดงปุ่มเปิด/ปิดเสียงขึ้นมา
+      if(audioToggleBtn) {
+        audioToggleBtn.classList.add('show');
       }
     }
 
@@ -1261,6 +1312,22 @@
   }
 
   btn.addEventListener('click', handleReveal);
+
+  if(audioToggleBtn && bgm) {
+    audioToggleBtn.addEventListener('click', function() {
+      if(bgm.muted) {
+        // ถ้าถูกปิดเสียงอยู่ ให้เปิดเสียง
+        bgm.muted = false;
+        audioToggleBtn.innerHTML = '🔊';
+        audioToggleBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.4), 0 0 15px rgba(91, 141, 239, 0.3)';
+      } else {
+        // ถ้ามีเสียงอยู่ ให้ปิดเสียง
+        bgm.muted = true;
+        audioToggleBtn.innerHTML = '🔇';
+        audioToggleBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.6)'; // ลดแสง glow ลงเวลาปิดเสียง
+      }
+    });
+  }
 
   function burstSnow() {
     for (var k = 0; k < 20; k++) {
@@ -1308,7 +1375,7 @@
 
 })();
 
-// ฟังก์ชัน Lightbox สำหรับดูรูปขยาย (รองรับรูปในหน้าเพื่อนๆ ด้วย)
+// ฟังก์ชัน Lightbox สำหรับดูรูปขยาย
 window.openLightbox = function(imgUrl, captionText) {
   var modal = document.getElementById('lightboxModal');
   var img = document.getElementById('lightboxImg');
