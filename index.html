@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>6/9 Y69❄️</title>
+<title>6/9 ปี69ดิ่วะ ❄️</title>
 <style>
   * {
     box-sizing: border-box;
@@ -555,15 +555,21 @@
     letter-spacing: 0.5px;
     text-shadow: 0 1px 4px rgba(0,0,0,0.4);
     animation: textBlink 2.2s ease-in-out infinite;
+    position: relative; /* Ensure it stays above background elements */
+    z-index: 10; /* Higher z-index to make it clickable */
+    padding: 10px; /* Add padding for better touch area */
   }
 
   .copyright a {
     color: #a4c2ff;
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
+    padding: 10px; /* Increase tap target size for mobile */
+    display: inline-block; /* Ensure padding applies fully */
+    -webkit-tap-highlight-color: rgba(164, 194, 255, 0.3); /* Visual feedback on mobile */
   }
 
-  .copyright a:hover {
+  .copyright a:hover, .copyright a:active {
     color: #ffffff;
     text-decoration: underline;
     text-shadow: 0 0 8px rgba(164, 194, 255, 0.8);
@@ -873,24 +879,17 @@
     <button class="btn" id="revealBtn">BOOM! ❄️</button>
   </div>
 
-  <!-- หมวดหมู่ที่ 2: หัวหน้าห้อง (กรอบรูปภาพ 2 กรอบพร้อมกล่องข้อความชื่อ) -->
+  <!-- หมวดหมู่ที่ 2: หัวหน้าห้อง -->
   <div class="tab-content" id="friendsTab">
     <div class="section-title">👑 หัวหน้าห้อง & รองหัวหน้า ชั้น ม.6/9</div>
     
     <div class="two-frames-container">
       
-      <!-- =================================================== -->
       <!-- กรอบรูปที่ 1 -->
-      <!-- =================================================== -->
       <div class="photo-frame">
         <div class="frame-image-wrapper" style="position: relative;">
-          <!-- ย้าย onClick มาไว้ที่รูปภาพ เพื่อให้คลิกรูปแล้วขยาย -->
           <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg" alt="รูปที่ 1" style="cursor: pointer;" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg', 'ต้นกล้า (หัวหน้าห้อง)')">
-          
-          <!-- ปุ่มกดดูข้อมูล -->
           <button class="info-btn" onclick="toggleInfo(this, event)">i</button>
-
-          <!-- ข้อมูลที่จะแสดงเมื่อกดปุ่ม -->
           <div class="info-overlay">
             <button class="close-info-btn" onclick="toggleInfo(this, event)">✕</button>
             <div class="info-content">
@@ -903,22 +902,14 @@
             </div>
           </div>
         </div>
-        <!-- กล่องข้อความชื่อ -->
         <div class="name-box">ต้นกล้า</div>
       </div>
 
-      <!-- =================================================== -->
       <!-- กรอบรูปที่ 2 -->
-      <!-- =================================================== -->
       <div class="photo-frame">
         <div class="frame-image-wrapper" style="position: relative;">
-          <!-- ย้าย onClick มาไว้ที่รูปภาพ เพื่อให้คลิกรูปแล้วขยาย -->
           <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg" alt="รูปที่ 2" style="cursor: pointer;" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg', 'เเบ็ค (รองหัวหน้าห้อง)')">
-          
-          <!-- ปุ่มกดดูข้อมูล -->
           <button class="info-btn" onclick="toggleInfo(this, event)">i</button>
-
-          <!-- ข้อมูลที่จะแสดงเมื่อกดปุ่ม -->
           <div class="info-overlay">
             <button class="close-info-btn" onclick="toggleInfo(this, event)">✕</button>
             <div class="info-content">
@@ -931,7 +922,6 @@
             </div>
           </div>
         </div>
-        <!-- กล่องข้อความชื่อ -->
         <div class="name-box">เเบ็ค</div>
       </div>
 
@@ -954,7 +944,7 @@
   <button class="modal-close-btn" onclick="closeLightbox()">ปิดหน้าต่าง ✕</button>
 </div>
 
-<!-- ปุ่มสำหรับควบคุมการเปิด/ปิดเสียง (ซ่อนไว้ก่อน) -->
+<!-- ปุ่มสำหรับควบคุมการเปิด/ปิดเสียง -->
 <button id="audioToggleBtn" class="audio-toggle" title="เปิด/ปิดเสียง">🔊</button>
 
 <script type="module">
