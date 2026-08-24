@@ -696,5 +696,29 @@
 })();
 </script>
 
+<script>
+(function trackVisitor() {
+  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTCmhu1CBqjuUtJF6ohw51VmGa_23odje9yBaD5JZtnUCCL5zD9VBd9jbyswWX9gXa/exec";
+
+  var ua = navigator.userAgent;
+  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  var deviceType = isMobile ? "Mobile / Tablet" : "Desktop";
+  
+  var now = new Date();
+  var timestamp = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH');
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      timestamp: timestamp,
+      deviceType: deviceType,
+      userAgent: ua
+    })
+  });
+})();
+</script>
+
 </body>
 </html>
