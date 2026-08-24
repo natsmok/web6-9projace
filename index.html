@@ -86,7 +86,6 @@
     visibility: visible;
   }
 
-  /* เมนูเลือกหมวดหมู่ */
   .category-tabs {
     display: flex;
     gap: 10px;
@@ -300,6 +299,70 @@
 
   .photo-frame:hover .frame-image-wrapper img {
     transform: scale(1.08);
+  }
+
+  .info-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 18, 48, 0.85); /* สีน้ำเงินเข้มโปร่งแสง */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 2;
+  }
+
+  .photo-frame:hover .info-overlay {
+    opacity: 1;
+  }
+
+  .info-content {
+    text-align: left;
+    width: 100%;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+  }
+
+  .photo-frame:hover .info-content {
+    transform: translateY(0);
+  }
+
+  .info-role {
+    display: inline-block;
+    background: rgba(91, 141, 239, 0.2);
+    color: #a4c2ff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    border: 1px solid rgba(140, 180, 255, 0.3);
+  }
+
+  .info-content p {
+    font-size: 13.5px;
+    margin: 5px 0;
+    line-height: 1.5;
+    color: #dbe7ff;
+  }
+
+  .info-content strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .click-hint {
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 16px;
+    font-style: italic;
+    animation: textBlink 2s infinite;
   }
 
   .name-box {
@@ -682,7 +745,7 @@
       <span>❄️</span> หน้าหลัก
     </button>
     <button class="tab-btn" data-tab="friendsTab">
-      <span>👑</span> หัวหน้าห้อง
+      <span>👑</span> หัวหน้าห้อง & รองหัวหน้า
     </button>
   </div>
 
@@ -709,25 +772,47 @@
     <div class="two-frames-container">
       
       <!-- =================================================== -->
-      <!-- กรอบรูปที่ 1 (เปลี่ยนรูปและชื่อได้ตรงนี้) -->
+      <!-- กรอบรูปที่ 1: เปลี่ยนฟังก์ชัน onClick ให้ใช้ URL ของรูปจริงและชื่อจริง -->
       <!-- =================================================== -->
-      <div class="photo-frame" onclick="openLightbox('https://placehold.co/600x800/16234a/ffffff?text=Photo+1', 'ใส่ชื่อที่นี่ 1')">
-        <div class="frame-image-wrapper">
+      <div class="photo-frame" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg', 'ต้นกล้า (หัวหน้าห้อง)')">
+        <div class="frame-image-wrapper" style="position: relative;">
           <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg" alt="รูปที่ 1">
+          <!-- ข้อมูลที่จะแสดงตอนโฮเวอร์ -->
+          <div class="info-overlay">
+            <div class="info-content">
+              <span class="info-role">👑หัวหน้าห้อง</span>
+              <p><strong>ชื่อ:</strong> นาย พัชรพล เสียมสกุล</p>
+              <p><strong>ชื่อเล่น:</strong> ต้นกล้า</p>
+              <p><strong>IG:</strong> tonklas_</p>
+              <p><strong>ฉายา:</strong> "ผู้กองต้นกล้า"</p>
+              <span class="click-hint">(คลิกเพื่อดูรูปเต็ม)</span>
+            </div>
+          </div>
         </div>
         <!-- กล่องข้อความชื่อ -->
-        <div class="name-box">หัวหน้าห้อง-ต้นกล้า</div>
+        <div class="name-box">ต้นกล้า</div>
       </div>
 
       <!-- =================================================== -->
-      <!-- กรอบรูปที่ 2 (เปลี่ยนรูปและชื่อได้ตรงนี้) -->
+      <!-- กรอบรูปที่ 2: เปลี่ยนฟังก์ชัน onClick ให้ใช้ URL ของรูปจริงและชื่อจริง -->
       <!-- =================================================== -->
-      <div class="photo-frame" onclick="openLightbox('https://placehold.co/600x800/16234a/ffffff?text=Photo+2', 'ใส่ชื่อที่นี่ 2')">
-        <div class="frame-image-wrapper">
+      <div class="photo-frame" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg', 'เเบ็ค (รองหัวหน้าห้อง)')">
+        <div class="frame-image-wrapper" style="position: relative;">
           <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg" alt="รูปที่ 2">
+          <!-- ข้อมูลที่จะแสดงตอนโฮเวอร์ -->
+          <div class="info-overlay">
+            <div class="info-content">
+              <span class="info-role">⭐ รองหัวหน้าห้อง</span>
+              <p><strong>ชื่อ:</strong> นาย ธิติ สุวรรณบุผา</p>
+              <p><strong>ชื่อเล่น:</strong> เเบ็ค</p>
+              <p><strong>IG:</strong> thiti_.14</p>
+              <p><strong>ฉายา:</strong> "หมอผี"</p>
+              <span class="click-hint">(คลิกเพื่อดูรูปเต็ม)</span>
+            </div>
+          </div>
         </div>
         <!-- กล่องข้อความชื่อ -->
-        <div class="name-box">รองหัวหน้า-เเบ้ค</div>
+        <div class="name-box">เเบ็ค</div>
       </div>
 
     </div>
