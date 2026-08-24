@@ -351,7 +351,7 @@
     z-index: 100;
     font-size: 12.5px;
     color: #c2d6ff;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
@@ -362,12 +362,95 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    opacity: 0; /* ซ่อนไว้ก่อนตอนเริ่มต้น */
+    visibility: hidden;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+
+  .view-counter.show {
+    opacity: 1; /* แสดงผลเมื่อใส่คลาส show */
+    visibility: visible;
   }
 
   .view-counter #viewCount {
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 0 8px rgba(140, 180, 255, 0.8);
+  }
+
+  /* --- ฉากเปลี่ยนผ่าน 6/9 Geometric --- */
+  #transitionScreen {
+    position: fixed;
+    inset: 0;
+    background-color: #030612; /* ดำสนิทอมน้ำเงินให้ดูเป็นอวกาศ/เทคโนโลยี */
+    z-index: 999; /* สูงสุดเพื่อบังทุกอย่างตอนกำลังวาด */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+
+  #transitionScreen.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .geo-svg {
+    width: 85vw;
+    max-width: 420px;
+    overflow: visible;
+  }
+
+  /* ความยาวเส้นแต่ละส่วนสำหรับการทำแอนิเมชันวาดรูป */
+  .path-stem { stroke-dasharray: 150; stroke-dashoffset: 150; }
+  .path-loop { stroke-dasharray: 260; stroke-dashoffset: 260; }
+  .path-slash { stroke-dasharray: 180; stroke-dashoffset: 180; }
+
+  /* แอนิเมชันการวาดเส้น */
+  #transitionScreen.active .stem-6,
+  #transitionScreen.active .stem-9 {
+    animation: drawGeoLine 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.5s;
+  }
+  
+  #transitionScreen.active .loop-6,
+  #transitionScreen.active .loop-9 {
+    animation: drawGeoLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 1.4s;
+  }
+
+  #transitionScreen.active .path-slash {
+    animation: drawGeoLine 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 2.4s;
+  }
+
+  /* เส้นประตกแต่งแบคกราวด์ */
+  .geo-accent {
+    stroke-dasharray: 3 12;
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+
+  #transitionScreen.active .geo-accent {
+    animation: spinAccent 10s linear infinite, fadeAccent 2s ease forwards;
+    animation-delay: 2.6s;
+  }
+
+  #accent6 { transform-origin: 100px 130px; }
+  #accent9 { transform-origin: 300px 70px; }
+
+  @keyframes drawGeoLine {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes fadeAccent {
+    to { opacity: 0.5; stroke-dashoffset: 0; }
+  }
+
+  @keyframes spinAccent {
+    100% { transform: rotate(360deg); }
   }
   /* --- สิ้นสุดส่วนสไตล์ของ Overlay --- */
 </style>
@@ -396,6 +479,50 @@
     <div class="status-text" id="loadingText">Gathering snowflakes ...</div>
     <button class="bloom-btn" id="enterBtn" disabled>กดเพื่อชม</button>
   </div>
+</div>
+
+<!-- เพิ่มหน้าจอ Transition Screen สีดำวาดเลขเรขาคณิตตรงนี้ -->
+<div id="transitionScreen">
+  <svg viewBox="0 0 400 200" class="geo-svg">
+    <defs>
+      <!-- เอฟเฟกต์แสงนีออนเรืองแสง -->
+      <filter id="neon-glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="4" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <!-- ไล่สีเส้น -->
+      <linearGradient id="geo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#5b8def" />
+        <stop offset="50%" stop-color="#a4c2ff" />
+        <stop offset="100%" stop-color="#ffffff" />
+      </linearGradient>
+    </defs>
+    
+    <!-- วงกลมประดับ (Accents) -->
+    <g stroke="#7da5f2" stroke-width="1.5" fill="none" stroke-linecap="round">
+      <circle id="accent6" class="geo-accent" cx="100" cy="130" r="55" />
+      <circle id="accent9" class="geo-accent" cx="300" cy="70" r="55" />
+    </g>
+
+    <!-- เส้นเรขาคณิตหลัก 6/9 -->
+    <g stroke="url(#geo-gradient)" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#neon-glow)">
+      <!-- เลข 6 (ก้าน) -->
+      <path class="path-stem stem-6" d="M 120,30 Q 60,30 60,130" />
+      <!-- เลข 6 (วงกลม) -->
+      <circle class="path-loop loop-6" cx="100" cy="130" r="40" />
+      
+      <!-- ขีดกลาง / -->
+      <line class="path-slash" x1="180" y1="180" x2="220" y2="20" />
+      
+      <!-- เลข 9 (ก้าน) -->
+      <path class="path-stem stem-9" d="M 280,170 Q 340,170 340,70" />
+      <!-- เลข 9 (วงกลม) -->
+      <circle class="path-loop loop-9" cx="300" cy="70" r="40" />
+    </g>
+  </svg>
 </div>
 
 <div class="stage" id="mainStage">
@@ -588,15 +715,30 @@
   enterBtn.addEventListener('click', function() {
       if(enterBtn.disabled) return;
 
-      introOverlay.classList.add('hidden');
+      var transitionScreen = document.getElementById('transitionScreen');
+      var viewCounter = document.querySelector('.view-counter');
 
-      setTimeout(function() {
-          mainStage.classList.add('active');
-      }, 600); 
+      // 1. เรียกหน้าจอดำ transition ขึ้นมาทับทุกอย่าง
+      transitionScreen.classList.add('active');
 
+      // 2. แอบซ่อนหน้า Loading ไว้ข้างหลังแบบเงียบๆ
       setTimeout(function() {
-          introOverlay.style.display = 'none'; 
-      }, 1000); 
+          introOverlay.classList.add('hidden');
+          setTimeout(function() {
+              introOverlay.style.display = 'none'; 
+          }, 600);
+      }, 300); 
+
+      // 3. รอให้แอนิเมชันวาดเส้น 6/9 วาดเสร็จและโชว์ความเท่ (ใช้เวลาประมาณ 4.5 วินาที)
+      setTimeout(function() {
+          mainStage.classList.add('active'); // เตรียมฉากหลัก
+          transitionScreen.classList.remove('active'); // เฟดหน้าจอดำออกเพื่อเผยภาพ
+          if (viewCounter) viewCounter.classList.add('show'); // แสดงยอดคนดูตรงนี้
+          
+          setTimeout(function() {
+              transitionScreen.style.display = 'none'; 
+          }, 600); 
+      }, 4800); 
   });
 
   var frame = document.getElementById('frame');
