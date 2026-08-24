@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>6/9 Y69❄️</title>
+<title>6/9 ปี69ดิ่วะ ❄️</title>
 <style>
   * {
     box-sizing: border-box;
@@ -557,6 +557,18 @@
     animation: textBlink 2.2s ease-in-out infinite;
   }
 
+  .copyright a {
+    color: #a4c2ff;
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .copyright a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(164, 194, 255, 0.8);
+  }
+
   #bg-text { display: none; }
 
   .overlay {
@@ -929,7 +941,7 @@
   <audio id="bgm" preload="auto" loop src="https://res.cloudinary.com/cr3qiibb/video/upload/v1787322791/809015544.729400_f83xcq.mp4"></audio>
 
   <footer class="copyright">
-    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 ❄️ | สงวนลิขสิทธิ์ © All Rights Reserved
+    สร้างสรรค์โดย ชั้น ม.6/9 ปี69 ❄️ | <a href="https://www.instagram.com/dp5__663/" target="_blank" rel="noopener noreferrer">สงวนลิขสิทธิ์ © All Rights Reserved</a>
   </footer>
 </div>
 
@@ -942,7 +954,7 @@
   <button class="modal-close-btn" onclick="closeLightbox()">ปิดหน้าต่าง ✕</button>
 </div>
 
-<!-- ปุ่มสำหรับควบคุมการเปิด/ปิดเพลง (ซ่อนไว้ก่อน) -->
+<!-- ปุ่มสำหรับควบคุมการเปิด/ปิดเสียง (ซ่อนไว้ก่อน) -->
 <button id="audioToggleBtn" class="audio-toggle" title="เปิด/ปิดเสียง">🔊</button>
 
 <script type="module">
@@ -1259,7 +1271,7 @@
   var bgm = document.getElementById('bgm');
   var btn = document.getElementById('revealBtn');
   var subTitle = document.getElementById('subTitle');
-  var audioToggleBtn = document.getElementById('audioToggleBtn'); // อ้างอิงปุ่มเปิดปิดเสียง
+  var audioToggleBtn = document.getElementById('audioToggleBtn');
 
   img1.classList.add('show');
 
@@ -1269,7 +1281,6 @@
     if (revealed) return;
     revealed = true;
 
-    // เล่นเพลง
     if (bgm) {
       bgm.volume = 1.0;
       var playPromise = bgm.play();
@@ -1279,7 +1290,6 @@
         });
       }
       
-      // แสดงปุ่มเปิด/ปิดเสียงขึ้นมา
       if(audioToggleBtn) {
         audioToggleBtn.classList.add('show');
       }
@@ -1316,15 +1326,13 @@
   if(audioToggleBtn && bgm) {
     audioToggleBtn.addEventListener('click', function() {
       if(bgm.muted) {
-        // ถ้าถูกปิดเสียงอยู่ ให้เปิดเสียง
         bgm.muted = false;
         audioToggleBtn.innerHTML = '🔊';
         audioToggleBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.4), 0 0 15px rgba(91, 141, 239, 0.3)';
       } else {
-        // ถ้ามีเสียงอยู่ ให้ปิดเสียง
         bgm.muted = true;
         audioToggleBtn.innerHTML = '🔇';
-        audioToggleBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.6)'; // ลดแสง glow ลงเวลาปิดเสียง
+        audioToggleBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.6)';
       }
     });
   }
@@ -1357,7 +1365,6 @@
     }
   }
 
-  // ระบบสลับหมวดหมู่ Tab Navigation
   var tabBtns = document.querySelectorAll('.tab-btn');
   var tabContents = document.querySelectorAll('.tab-content');
 
@@ -1375,7 +1382,6 @@
 
 })();
 
-// ฟังก์ชัน Lightbox สำหรับดูรูปขยาย
 window.openLightbox = function(imgUrl, captionText) {
   var modal = document.getElementById('lightboxModal');
   var img = document.getElementById('lightboxImg');
@@ -1394,10 +1400,9 @@ window.closeLightbox = function() {
   }
 };
 
-// ฟังก์ชันเปิด/ปิดกล่องข้อมูล (Info Overlay)
 window.toggleInfo = function(btn, event) {
   if (event) {
-    event.stopPropagation(); // ป้องกันไม่ให้ Event ทะลุไปโดนรูปภาพ
+    event.stopPropagation();
   }
   var wrapper = btn.closest('.frame-image-wrapper');
   var overlay = wrapper.querySelector('.info-overlay');
