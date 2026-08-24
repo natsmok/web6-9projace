@@ -428,23 +428,51 @@
   import { getFirestore, doc, setDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
   const appId = typeof __app_id !== 'undefined' ? __app_id : 'm69-project-stats';
-  const firebaseConfig = typeof __firebase_config !== 'undefined' 
-    ? JSON.parse(__firebase_config) 
-    : {
-        apiKey: "demo-api-key",
-        authDomain: "demo.firebaseapp.com",
-        projectId: "demo-project",
-        storageBucket: "demo.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:123456"
-      };
+  const hasRealFirebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config && !__firebase_config.includes('demo-project');
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  const firebaseConfig = hasRealFirebaseConfig 
+    ? JSON.parse(__firebase_config) 
+    : null;
+
+  // ฟังก์ชันสถิติตัวนับสำรอง (Global Cloud Counter) สำหรับใช้งานภายนอกระบบ หรือเมื่อ Firebase เชื่อมต่อไม่ได้
+  async function updateFallbackCounter() {
+    try {
+      const res = await fetch('https://api.counterapi.dev/v1/m69_class_69_project_2026/views/up');
+      if (res.ok) {
+        const data = await res.json();
+        const viewEl = document.getElementById('viewCount');
+        if (viewEl && data.count !== undefined) {
+          viewEl.textContent = Number(data.count).toLocaleString('th-TH');
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("Global Counter API connection fallback:", e);
+    }
+
+    // สำรองระดับสุดท้ายกรณีออฟไลน์
+    try {
+      let localCount = parseInt(localStorage.getItem('m69_page_views') || '12', 10) + 1;
+      localStorage.setItem('m69_page_views', localCount);
+      const viewEl = document.getElementById('viewCount');
+      if (viewEl) viewEl.textContent = localCount.toLocaleString('th-TH');
+    } catch (err) {
+      const viewEl = document.getElementById('viewCount');
+      if (viewEl) viewEl.textContent = '1';
+    }
+  }
 
   async function initStats() {
+    if (!firebaseConfig) {
+      await updateFallbackCounter();
+      return;
+    }
+
     try {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
       if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
         await signInWithCustomToken(auth, __initial_auth_token);
       } else {
@@ -466,13 +494,13 @@
             viewEl.textContent = count.toLocaleString('th-TH');
           }
         }
-      }, (error) => {
-        console.error("Stats listener error:", error);
+      }, async (error) => {
+        console.error("Firebase stats error, switching to fallback counter:", error);
+        await updateFallbackCounter();
       });
     } catch (error) {
-      console.error("Firebase stats error:", error);
-      const viewEl = document.getElementById('viewCount');
-      if (viewEl) viewEl.textContent = '1';
+      console.error("Firebase init error, switching to fallback counter:", error);
+      await updateFallbackCounter();
     }
   }
 
