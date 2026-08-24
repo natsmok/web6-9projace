@@ -712,11 +712,143 @@
     progressBar.style.width = progress + '%';
   }, 220); 
 
+  // ฟังก์ชันสร้างเสียงเอฟเฟกต์ระดับภาพยนตร์ Sci-Fi 5 เลเยอร์ (Cinematic Web Audio API)
+  function playNeonDrawSound() {
+    try {
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      var ctx = new AudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      var now = ctx.currentTime;
+
+      // Layer 1: Sub-Bass Impact (เบสแน่นๆ เปิดตัวอารมณ์หนัง Sci-Fi)
+      var subOsc = ctx.createOscillator();
+      var subGain = ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(160, now);
+      subOsc.frequency.exponentialRampToValueAtTime(35, now + 1.2);
+      subGain.gain.setValueAtTime(0.5, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+      subOsc.connect(subGain);
+      subGain.connect(ctx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 1.5);
+
+      // Layer 2: White Noise Whoosh (เสียงชาร์จพลังงานวูบวาบ)
+      var bufferSize = ctx.sampleRate * 4.2;
+      var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      var data = buffer.getChannelData(0);
+      for (var i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      var noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      var filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.Q.setValueAtTime(4.0, now);
+      filter.frequency.setValueAtTime(150, now);
+      filter.frequency.exponentialRampToValueAtTime(3200, now + 3.2);
+
+      var noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.01, now);
+      noiseGain.gain.linearRampToValueAtTime(0.18, now + 2.5);
+      noiseGain.gain.linearRampToValueAtTime(0.22, now + 3.2);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 4.2);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noise.start(now);
+
+      // Layer 3: Neon Laser Harmonics (เสียงนีออนสังเคราะห์เลเซอร์ลากเส้น)
+      var freqs = [110, 164.81, 220, 329.63];
+      freqs.forEach(function(freq, index) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now + 0.3);
+        osc.frequency.exponentialRampToValueAtTime(freq * 2.5, now + 3.5);
+
+        var lpFilter = ctx.createBiquadFilter();
+        lpFilter.type = 'lowpass';
+        lpFilter.frequency.setValueAtTime(200, now + 0.3);
+        lpFilter.frequency.exponentialRampToValueAtTime(4500, now + 3.2);
+
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.setValueAtTime(0.001, now + 0.3);
+        gain.gain.linearRampToValueAtTime(0.04, now + 1.5);
+        gain.gain.linearRampToValueAtTime(0.06, now + 3.2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
+
+        osc.connect(lpFilter);
+        if (panner) {
+          panner.pan.setValueAtTime((index % 2 === 0 ? -0.6 : 0.6), now);
+          lpFilter.connect(panner);
+          panner.connect(gain);
+        } else {
+          lpFilter.connect(gain);
+        }
+        gain.connect(ctx.destination);
+
+        osc.start(now + 0.3);
+        osc.stop(now + 4.3);
+      });
+
+      // Layer 4: Crystal Shimmer Chimes (เสียงประกายคริสตัลตอนวาดเสร็จ)
+      var chimes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+      chimes.forEach(function(noteFreq, idx) {
+        var startTime = now + 2.4 + (idx * 0.18);
+        var chimeOsc = ctx.createOscillator();
+        var chimeGain = ctx.createGain();
+
+        chimeOsc.type = 'sine';
+        chimeOsc.frequency.setValueAtTime(noteFreq, startTime);
+
+        chimeGain.gain.setValueAtTime(0.001, startTime);
+        chimeGain.gain.linearRampToValueAtTime(0.05, startTime + 0.05);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.8);
+
+        chimeOsc.connect(chimeGain);
+        chimeGain.connect(ctx.destination);
+
+        chimeOsc.start(startTime);
+        chimeOsc.stop(startTime + 0.9);
+      });
+
+      // Layer 5: Final Climax Boom (เสียงเบสส่งท้ายก่อนเปิดรูปภาพ)
+      var boomOsc = ctx.createOscillator();
+      var boomGain = ctx.createGain();
+      boomOsc.type = 'sine';
+      boomOsc.frequency.setValueAtTime(120, now + 3.6);
+      boomOsc.frequency.exponentialRampToValueAtTime(25, now + 4.6);
+
+      boomGain.gain.setValueAtTime(0.001, now + 3.6);
+      boomGain.gain.linearRampToValueAtTime(0.3, now + 3.65);
+      boomGain.gain.exponentialRampToValueAtTime(0.001, now + 4.8);
+
+      boomOsc.connect(boomGain);
+      boomGain.connect(ctx.destination);
+      boomOsc.start(now + 3.6);
+      boomOsc.stop(now + 4.9);
+
+    } catch (e) {
+      console.log("Browser doesn't support Web Audio API", e);
+    }
+  }
+
   enterBtn.addEventListener('click', function() {
       if(enterBtn.disabled) return;
 
       var transitionScreen = document.getElementById('transitionScreen');
       var viewCounter = document.querySelector('.view-counter');
+
+      // เรียกใช้เสียงเอฟเฟกต์ล้ำๆ ทันทีที่กดปุ่ม!
+      playNeonDrawSound();
 
       // 1. เรียกหน้าจอดำ transition ขึ้นมาทับทุกอย่าง
       transitionScreen.classList.add('active');
