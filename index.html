@@ -312,12 +312,14 @@
     justify-content: center;
     padding: 20px;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
     z-index: 2;
   }
 
-  .photo-frame:hover .info-overlay {
+  .info-overlay.active {
     opacity: 1;
+    visibility: visible;
   }
 
   .info-content {
@@ -327,8 +329,61 @@
     transition: transform 0.4s ease;
   }
 
-  .photo-frame:hover .info-content {
+  .info-overlay.active .info-content {
     transform: translateY(0);
+  }
+
+  .info-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(15, 25, 55, 0.65);
+    border: 1px solid rgba(180, 205, 255, 0.4);
+    color: #ffffff;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .info-btn:hover {
+    background: rgba(59, 116, 230, 0.9);
+    transform: scale(1.05);
+  }
+
+  .close-info-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+    z-index: 4;
+  }
+
+  .close-info-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
   }
 
   .info-role {
@@ -772,20 +827,26 @@
     <div class="two-frames-container">
       
       <!-- =================================================== -->
-      <!-- กรอบรูปที่ 1: เปลี่ยนฟังก์ชัน onClick ให้ใช้ URL ของรูปจริงและชื่อจริง -->
+      <!-- กรอบรูปที่ 1 -->
       <!-- =================================================== -->
-      <div class="photo-frame" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg', 'ต้นกล้า (หัวหน้าห้อง)')">
+      <div class="photo-frame">
         <div class="frame-image-wrapper" style="position: relative;">
-          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg" alt="รูปที่ 1">
-          <!-- ข้อมูลที่จะแสดงตอนโฮเวอร์ -->
+          <!-- ย้าย onClick มาไว้ที่รูปภาพ เพื่อให้คลิกรูปแล้วขยาย -->
+          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg" alt="รูปที่ 1" style="cursor: pointer;" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2_qssdyw.jpg', 'ต้นกล้า (หัวหน้าห้อง)')">
+          
+          <!-- ปุ่มกดดูข้อมูล -->
+          <button class="info-btn" onclick="toggleInfo(this, event)">i</button>
+
+          <!-- ข้อมูลที่จะแสดงเมื่อกดปุ่ม -->
           <div class="info-overlay">
+            <button class="close-info-btn" onclick="toggleInfo(this, event)">✕</button>
             <div class="info-content">
               <span class="info-role">👑หัวหน้าห้อง</span>
               <p><strong>ชื่อ:</strong> นาย พัชรพล เสียมสกุล</p>
               <p><strong>ชื่อเล่น:</strong> ต้นกล้า</p>
               <p><strong>IG:</strong> tonklas_</p>
               <p><strong>ฉายา:</strong> "ผู้กองต้นกล้า"</p>
-              <span class="click-hint">(คลิกเพื่อดูรูปเต็ม)</span>
+              <span class="click-hint" style="margin-top: 8px;">(คลิกที่รูปเพื่อขยาย)</span>
             </div>
           </div>
         </div>
@@ -794,20 +855,26 @@
       </div>
 
       <!-- =================================================== -->
-      <!-- กรอบรูปที่ 2: เปลี่ยนฟังก์ชัน onClick ให้ใช้ URL ของรูปจริงและชื่อจริง -->
+      <!-- กรอบรูปที่ 2 -->
       <!-- =================================================== -->
-      <div class="photo-frame" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg', 'เเบ็ค (รองหัวหน้าห้อง)')">
+      <div class="photo-frame">
         <div class="frame-image-wrapper" style="position: relative;">
-          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg" alt="รูปที่ 2">
-          <!-- ข้อมูลที่จะแสดงตอนโฮเวอร์ -->
+          <!-- ย้าย onClick มาไว้ที่รูปภาพ เพื่อให้คลิกรูปแล้วขยาย -->
+          <img src="https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg" alt="รูปที่ 2" style="cursor: pointer;" onclick="openLightbox('https://res.cloudinary.com/cr3qiibb/image/upload/v1787593482/%E0%B9%80%E0%B9%80%E0%B8%9A%E0%B9%89%E0%B8%84_sddzur.jpg', 'เเบ็ค (รองหัวหน้าห้อง)')">
+          
+          <!-- ปุ่มกดดูข้อมูล -->
+          <button class="info-btn" onclick="toggleInfo(this, event)">i</button>
+
+          <!-- ข้อมูลที่จะแสดงเมื่อกดปุ่ม -->
           <div class="info-overlay">
+            <button class="close-info-btn" onclick="toggleInfo(this, event)">✕</button>
             <div class="info-content">
               <span class="info-role">⭐ รองหัวหน้าห้อง</span>
               <p><strong>ชื่อ:</strong> นาย ธิติ สุวรรณบุผา</p>
               <p><strong>ชื่อเล่น:</strong> เเบ็ค</p>
               <p><strong>IG:</strong> thiti_.14</p>
               <p><strong>ฉายา:</strong> "หมอผี"</p>
-              <span class="click-hint">(คลิกเพื่อดูรูปเต็ม)</span>
+              <span class="click-hint" style="margin-top: 8px;">(คลิกที่รูปเพื่อขยาย)</span>
             </div>
           </div>
         </div>
@@ -1257,6 +1324,18 @@ window.closeLightbox = function() {
   var modal = document.getElementById('lightboxModal');
   if(modal) {
     modal.classList.remove('active');
+  }
+};
+
+// ฟังก์ชันเปิด/ปิดกล่องข้อมูล (Info Overlay)
+window.toggleInfo = function(btn, event) {
+  if (event) {
+    event.stopPropagation(); // ป้องกันไม่ให้ Event ทะลุไปโดนรูปภาพ
+  }
+  var wrapper = btn.closest('.frame-image-wrapper');
+  var overlay = wrapper.querySelector('.info-overlay');
+  if (overlay) {
+    overlay.classList.toggle('active');
   }
 };
 </script>
